@@ -4,11 +4,14 @@
 #
 # Translators:
 # George Machitidze <giomac@gmail.com>, 2012
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2022
 msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Georgian (http://www.transifex.com/freedesktop/packagekit/language/ka/)\n"
+"Language-Team: Georgian (http://app.transifex.com/freedesktop/packagekit/language/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,19 +21,106 @@ msgstr ""
 msgid "(seconds)"
 msgstr "(წამი)"
 
+#. TRANSLATORS: The user specified
+#. * an invalid action
+msgid "A correct role is required"
+msgstr "სწორი როლი აუცილებელია"
+
+msgid "A filename is required"
+msgstr "ფაილის სახელი აუცილებელია"
+
+#. TRANSLATORS: the user did not
+#. * specify what they wanted to install
+msgid "A filename to install is required"
+msgstr "საჭიროა დასაყენებელი ფაილის სახელი"
+
 #. TRANSLATORS: The user did not
 #. * provide a package name
 msgid "A package name is required"
 msgstr "პაკეტის სახელი აუცილებელია"
+
+#. TRANSLATORS: the user did not
+#. * specify what they wanted to install
+msgid "A package name to install is required"
+msgstr "დასაყენებელი პაკეტის სახელი აუცილებელია"
+
+#. TRANSLATORS: the user did not
+#. * specify what they wanted to remove
+msgid "A package name to remove is required"
+msgstr "წასაშლელი პაკეტის სახელი აუცილებელია"
+
+#. TRANSLATORS: each package
+#. * "provides" certain things, e.g.
+#. * mime(gstreamer-decoder-mp3),
+#. * the user didn't specify it
+msgid "A package provide string is required"
+msgstr "პაკეტს მომწოდებლის სტრიქონი აუცილებელია"
 
 #. TRANSLATORS: The user did not
 #. * specify a repository name
 msgid "A repository name is required"
 msgstr "რეპოზიტორიის სახელი აუცილებელია"
 
+#. TRANSLATORS: the user
+#. * needs to provide a search term
+#. TRANSLATORS: the user needs
+#. * to provide a search term
+msgid "A search term is required"
+msgstr "ძებნის სტრიქონი აუცილებელია"
+
+#. TRANSLATORS: a search type can
+#. * be name, details, file, etc
+msgid "A search type is required, e.g. name"
+msgstr "ძებნის ტიპი აუცილებელია. მაგ: სახელი"
+
+#. SECURITY:
+#. - Normal users do not require admin authentication to accept new
+#. licence agreements.
+#. - Change this to 'auth_admin' for environments where users should not
+#. be given the option to make legal decisions.
+msgid "Accept EULA"
+msgstr "EULA-ის დათანხმება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Accepting EULA"
+msgstr "EULA-ზე დათანხმება"
+
+#. TRANSLATORS: these are packages touched by the transaction
+msgid "Affected packages:"
+msgstr "შეიცვლება პაკეტები:"
+
+#. TRANSLATORS: these are packages touched by the transaction
+msgid "Affected packages: None"
+msgstr "შეიცვლება პაკეტები: არცერთი"
+
+#. TRANSLATORS: the EULA text itself (long and boring)
+msgid "Agreement"
+msgstr "შეთანხმება"
+
+#. TRANSLATORS: this is a command alias
+#, c-format
+msgid "Alias to %s"
+msgstr "%s-ის მეტსახელი"
+
 #. TRANSLATORS: a package requires the application to be restarted
 msgid "Application restart required by:"
 msgstr "პროგრამის გადატვირთვას ითხოვს:"
+
+#. TRANSLATORS: this is the author of the backend
+msgid "Author"
+msgstr "ავტორი"
+
+#. TRANSLATORS: The state of a package, i.e. not installed
+msgid "Available"
+msgstr "ხელმისაწვდომია"
+
+#. TRANSLATORS: The type of update
+msgid "Blocked"
+msgstr "დაბლოკილია"
+
+#. TRANSLATORS: The type of update
+msgid "Bug fix"
+msgstr "შეცდომების გასწორება"
 
 #. TRANSLATORS: details about the update, the bugzilla URLs
 msgid "Bugzilla"
@@ -39,6 +129,21 @@ msgstr "Bugzilla"
 #. TRANSLATORS: details about the update, the CVE URLs
 msgid "CVE"
 msgstr "CVE"
+
+#. SECURITY:
+#. - Normal users are allowed to cancel their own task without
+#. authentication, but a different user id needs the admin password
+#. to cancel another users task.
+msgid "Cancel foreign task"
+msgstr "უცხო ამოცანის გაუქმება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Canceling"
+msgstr "გაუქმება"
+
+#. TRANSLATORS: transaction state, in the process of cancelling
+msgid "Cancelling"
+msgstr "გაუქმება"
 
 #. TRANSLATORS: this is the group category name
 msgid "Category"
@@ -49,6 +154,34 @@ msgstr "კატეგორია"
 msgid "Changes"
 msgstr "ცვლილებები"
 
+#. TRANSLATORS: transaction state, we are checking executable files currently
+#. in use
+msgid "Checking applications in use"
+msgstr "ამჟამად გამოყენებული პროგრამების შემოწმება"
+
+#. TRANSLATORS: transaction state, we are checking for libraries currently in
+#. use
+msgid "Checking libraries in use"
+msgstr "ამჟამად გამოყენებული ბიბლიოთეკების შემოწმება"
+
+#. TRANSLATORS: transaction state, checking if we have all the security keys
+#. for the operation
+msgid "Checking signatures"
+msgstr "ხელმოწერების შემოწმება"
+
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Cleaned up"
+msgstr "მოსუფთავებულია"
+
+#. TRANSLATORS: The action of the package, in present tense
+msgid "Cleaning up"
+msgstr "მოსუფთავება"
+
+#. TRANSLATORS: transaction state, removing old packages, and cleaning config
+#. files
+msgid "Cleaning up packages"
+msgstr "პაკეტების გასუფთავება"
+
 #. TRANSLATORS: Generic failure of what they asked to do
 msgid "Command failed"
 msgstr "ბრძანება ვერ შესრულდა"
@@ -56,6 +189,33 @@ msgstr "ბრძანება ვერ შესრულდა"
 #. TRANSLATORS: this is The command line used to do the action
 msgid "Command line"
 msgstr "ბრძანებათა სტრიქონი"
+
+msgid "Command not found, valid commands are:"
+msgstr "ბრძანება ვერ ვიპოვე. სწორი ბრძანებებია:"
+
+#. TRANSLATORS: transaction state, when we're writing to the system package
+#. database
+msgid "Committing changes"
+msgstr "ცვლილებების გადაცემა"
+
+msgid "Config file was not found."
+msgstr "კონფიგურაციის ფაილი ვერ ვიპოვე."
+
+#. TRANSLATORS: transaction state, we are copying package files before or
+#. after the transaction
+msgid "Copying files"
+msgstr "ფაილების ასლი"
+
+msgid "Debugging Options"
+msgstr "გამართვის პარამეტრები"
+
+#. TRANSLATORS: this is the description of the backend
+msgid "Description"
+msgstr "აღწერა"
+
+#. TRANSLATORS: this is a header for the package that can be updated
+msgid "Details about the update:"
+msgstr "განახლების დეტალები:"
 
 #. TRANSLATORS: the directory does
 #. * not exist, so we can't continue
@@ -70,6 +230,51 @@ msgstr "გამოირთო"
 msgid "Distribution"
 msgstr "გავრცელება"
 
+#. TRANSLATORS: ask the user if they've read and accepted the EULA
+msgid "Do you accept this agreement?"
+msgstr "ეთანხმებით შეთანხმებას?"
+
+#. TRANSLATORS: ask the user if they want to import
+msgid "Do you accept this signature?"
+msgstr "ეთანხმებით ამ ხელმოწერას?"
+
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Downloaded"
+msgstr "გადმოწერილია"
+
+#. TRANSLATORS: The action of the package, in present tense
+msgid "Downloading"
+msgstr "გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading file lists"
+msgstr "ფაილეის სიების გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading groups"
+msgstr "ჯგუფების გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading list of packages"
+msgstr "პაკეტების სიის გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading lists of changes"
+msgstr "ცვლილებების სიის გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading package files
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Downloading packages"
+msgstr "პაკეტების გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading repository information"
+msgstr "რეპოზიტორიის ინფორმაციის გადმოწერა"
+
+#. TRANSLATORS: transaction state, downloading metadata
+msgid "Downloading update information"
+msgstr "განახლებების ინფორმაციის გადმოწერა"
+
 #. TRANSLATORS: this is The duration of the transaction
 msgid "Duration"
 msgstr "ხანგრძლივობა"
@@ -77,6 +282,40 @@ msgstr "ხანგრძლივობა"
 #. TRANSLATORS: if the repo is enabled
 msgid "Enabled"
 msgstr "ჩაირთო"
+
+#. TRANSLATORS: The type of update
+msgid "Enhancement"
+msgstr "გაფართოება"
+
+#. TRANSLATORS: exit after we've started up, used for user profiling
+msgid "Exit after a small delay"
+msgstr "გამოსვლამდე მცირე დაყოვნება"
+
+#. TRANSLATORS: exit straight away, used for automatic profiling
+msgid "Exit after the engine has loaded"
+msgstr "გამოსვლა ძრავის ჩატვირთვის შემდეგ"
+
+#. TRANSLATORS: we failed to install the package
+msgid "Failed to install packages"
+msgstr "პაკეტების დაყენების შეცდომა"
+
+#. TRANSLATORS: we failed to launch the executable, the error follows
+msgid "Failed to launch:"
+msgstr "გაშვების შეცდომა:"
+
+#. TRANSLATORS: The placeholder is an error message
+#, c-format
+msgid "Failed to load config file: %s"
+msgstr "კონფიგურაციის ფაილის ჩატვირთვის შეცდომა: %s"
+
+#. TRANSLATORS: cannot load the backend the user specified
+#, c-format
+msgid "Failed to load the backend: %s"
+msgstr "უკანაბოლოს ჩატვირთვის შეცდომა: %s"
+
+#. TRANSLATORS: the user didn't read the man page
+msgid "Failed to parse arguments"
+msgstr "არგუმენტების დამუშავების შეცდომა"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
 msgid "Failed to search for file"
@@ -90,6 +329,78 @@ msgstr "მცდარი"
 msgid "Fatal error"
 msgstr "ფატალური შეცდომა"
 
+#. TRANSLATORS: There was an error
+#. * getting the list of packages.
+#. * The filename follows
+#, c-format
+msgid "File already exists: %s"
+msgstr "ფაილი უკვე არსებობს: %s"
+
+#. TRANSLATORS: transaction state, all done!
+msgid "Finished"
+msgstr "დასრულებულია"
+
+#. TRANSLATORS: transaction state, generating a list of packages installed on
+#. the system
+msgid "Generating package lists"
+msgstr "პაკეტების სიის შედგენა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting categories"
+msgstr "კატეგორიების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting dependencies"
+msgstr "დამოკიდებულებების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting details"
+msgstr "დეტალების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting file list"
+msgstr "ფაილების სიის მიღება"
+
+#. TRANSLATORS: transaction state, getting data from a server
+msgid "Getting information"
+msgstr "ინფორმაციის მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting packages"
+msgstr "პაკეტების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting provides"
+msgstr "მომწოდებლების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting repositories"
+msgstr "რეპოზიტორიების მიღბა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting requires"
+msgstr "საჭიროებების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting system upgrades"
+msgstr "სისტემის განახლებების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting transactions"
+msgstr "ტრანზაქციების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting update details"
+msgstr "განახლების დეტალების მიღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting updates"
+msgstr "განახლებების მღება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Getting upgrades"
+msgstr "განახლებების მიღება"
+
 #. TRANSLATORS: this is group identifier
 msgid "ID"
 msgstr "ID"
@@ -98,14 +409,113 @@ msgstr "ID"
 msgid "Icon"
 msgstr "ხატულა"
 
+#. TRANSLATORS: The type of update
+msgid "Important"
+msgstr "მნიშვნელოვანი"
+
+#. TRANSLATORS: command description
+msgid "Install package"
+msgstr "პაკეტის დაყენება"
+
+#. SECURITY:
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
+msgid "Install signed package"
+msgstr "ხელმოწერილი პაკეტის დაყენება"
+
+#. command line argument, do we ask questions
+msgid "Install the packages without asking for confirmation"
+msgstr "პაკეტების დასურის გარეშე დაყენება"
+
+#. SECURITY:
+#. - Normal users require admin authentication to install untrusted or
+#. unrecognised packages, as allowing users to do this without a
+#. password would be a massive security hole.
+#. - This is not retained as each package should be authenticated.
+msgid "Install untrusted local file"
+msgstr "არასანდო ლოკალური ფაილის დაყენება"
+
+#. TRANSLATORS: The state of a package
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Installed"
+msgstr "ჩადგმულია"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Installing"
+msgstr "დაყენება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Installing files"
+msgstr "ფაილების დაყენება"
+
+#. TRANSLATORS: transaction state, installing packages
+msgid "Installing packages"
+msgstr "პაკეტების დაყენება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Installing signature"
+msgstr "ხელმოწერის დაყენება"
+
+#. TRANSLATORS: transaction state, installing updates
+msgid "Installing updates"
+msgstr "განახლებების დაყენება"
+
 #. TRANSLATORS: details about the update, date the update
 #. * was issued
 msgid "Issued"
 msgstr "გამოშვება"
 
+#. TRANSLATORS: the key ID, usually a few hex digits
+msgid "Key ID"
+msgstr "გასაღების ID"
+
+#. TRANSLATORS: the timestamp (a bit like a machine readable time)
+msgid "Key Timestamp"
+msgstr "გასაღების დროის შტამპი"
+
+#. TRANSLATORS: the key URL
+msgid "Key URL"
+msgstr "გასაღების URL"
+
+#. TRANSLATORS: the key fingerprint, again, yet more hex
+msgid "Key fingerprint"
+msgstr "გასაღებს ანაბეჭდი"
+
+#. TRANSLATORS: the username of the key
+msgid "Key user"
+msgstr "გასაღების მომხმარებელი"
+
+#. TRANSLATORS: transaction state, loading databases
+msgid "Loading cache"
+msgstr "ქეშის ჩატვირთვა"
+
 #. TRANSLATORS: loading package cache so we can search
 msgid "Loading list of packages."
 msgstr "პაკეტების სიის ჩატვირთვა."
+
+#. TRANSLATORS: the user needs to change media inserted into the computer
+msgid "Media change required"
+msgstr "საჭიროა დისკის შეცვლა"
+
+#. TRANSLATORS: the media label, usually like 'disk-1of3'
+msgid "Media label"
+msgstr "მედიის ჭდე"
+
+#. TRANSLATORS: the type, e.g. DVD, CD, etc
+msgid "Media type"
+msgstr "მედიის ტიპი"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Modifying repository"
+msgstr "რეპოზიტორიების ჩასწორება"
+
+#. TRANSLATORS: more than one package could be found that matched,
+#. * to follow is a list of possible packages
+msgid "More than one package matches:"
+msgstr "ემთხვევა ერთზე მეტი პაკეტი:"
 
 #. TRANSLATORS: this is the name of the parent group
 #. TRANSLATORS: this is the name of the backend
@@ -116,16 +526,43 @@ msgstr "სახელი"
 msgid "No files"
 msgstr "ფაილები არაა"
 
+#. TRANSLATORS: we couldn't find anything
+msgid "No packages were found"
+msgstr "პაკეტები ნაპოვნი არაა"
+
+#. TRANSLATORS: The type of update
+msgid "Normal"
+msgstr "ჩვეულებრივი"
+
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Obsoleted"
+msgstr "ამოღებულია"
+
 #. TRANSLATORS: details about the update, any packages that
 #. * this update obsoletes
 msgid "Obsoletes"
 msgstr "მოძველებული"
+
+#. TRANSLATORS: The action of the package, in present tense
+msgid "Obsoleting"
+msgstr "ამოღება"
+
+#. TRANSLATORS: transaction state, obsoleting old packages
+msgid "Obsoleting packages"
+msgstr "პაკეტების მოძველებულად მონიშვნა"
 
 #. TRANSLATORS: The user tried to use an
 #. * unsupported option on the command line
 #, c-format
 msgid "Option '%s' is not supported"
 msgstr "პარამეტრი '%s' არ არის მხარდაჭერილი"
+
+#. TRANSLATORS: details about the update, package name and version
+#. TRANSLATORS: the package that is being processed
+#. TRANSLATORS: the package that is not signed by a known key
+#. TRANSLATORS: the package name that was trying to be installed
+msgid "Package"
+msgstr "პაკეტი"
 
 #. TRANSLATORS: This a list of details about the package
 msgid "Package description"
@@ -135,9 +572,22 @@ msgstr "პაკეტის აღწერა"
 msgid "Package files"
 msgstr "პაკეტის ფაილები"
 
+#. TRANSLATORS: we asked to install a package
+#. * that could not be found in any repo
+msgid "Package not found"
+msgstr "პაკეტი ვერ ვიპოვე"
+
+#. TRANSLATORS: program name
+msgid "PackageKit"
+msgstr "PackageKit"
+
 #. TRANSLATORS: This is the header to the --help menu
 msgid "PackageKit Console Interface"
 msgstr "PackageKit კონსოლური ინტერფეისი"
+
+#. TRANSLATORS: describing the service that is running
+msgid "PackageKit service"
+msgstr "PackageKit-ის სერვისი"
 
 #. TRANSLATORS: this is the parent group
 msgid "Parent"
@@ -147,9 +597,120 @@ msgstr "მშობლიური"
 msgid "Percentage"
 msgstr "პროცენტი"
 
+#. TRANSLATORS: ask the user to choose a file to run
+msgid "Please choose a command to run"
+msgstr "აირჩიეთ გასაშვები ბრძანება"
+
+#. TRANSLATORS: This finds out which package in the list to use
+msgid "Please choose the correct package: "
+msgstr "აირჩიეთ სწორი პაკეტი: "
+
+#, c-format
+msgid "Please enter a number from 1 to %i: "
+msgstr "შეიყვანეთ რიცხვი 1-დან %i-მდე: "
+
+#. TRANSLATORS: a package needs to restart the session
+msgid "Please logout and login to complete the update."
+msgstr "განახლების დასასრულებლად გადით და თავიდან შემოდით თქვენს ანგარიშში."
+
+#. TRANSLATORS: a package needs to restart their system
+msgid "Please restart the computer to complete the update."
+msgstr "განახლების დასასრულებლად გადატვირთეთ კომპიუტერი."
+
+#. TRANSLATORS: There follows a list of packages downloaded and ready
+#. * to be updated
+msgid "Prepared updates:"
+msgstr "მომზადებული განალებები:"
+
+#. TRANSLATORS: transaction state, is querying data
+msgid "Querying"
+msgstr "მოთხოვნა"
+
 #. TRANSLATORS: this is the users real name, e.g. "Richard Hughes"
 msgid "Real name"
 msgstr "ნამდვილი სახელი"
+
+#. SECURITY:
+#. - Normal users do not require admin authentication to refresh the
+#. cache, as this doesn't actually install or remove software.
+msgid "Refresh system repositories"
+msgstr "სისტემური რეპოზიტორიების განახლება"
+
+#. TRANSLATORS: command description
+msgid "Refresh the cache"
+msgstr "ქეშის განახლება"
+
+#. TRANSLATORS: command description
+msgid "Refresh the cache (forced)"
+msgstr "ქეშის განახლება (ძალით)"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Refreshing cache"
+msgstr "ქეშის განახლება"
+
+#. TRANSLATORS: transaction state, refreshing internal lists
+msgid "Refreshing software list"
+msgstr "პროგრამული უზრუნველყოფის სიის განახლება"
+
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Reinstalled"
+msgstr "გადაყენდა"
+
+#. TRANSLATORS: The action of the package, in present tense
+msgid "Reinstalling"
+msgstr "გადაყენება"
+
+#. SECURITY:
+#. - Normal users require admin authentication to remove packages as
+#. this can make the system unbootable or stop other applications from
+#. working.
+#. - Be sure to close the tool used to remove the packages after the
+#. admin authentication has been obtained, otherwise packages can still
+#. be removed. If this is not possible, change this authentication to
+#. 'auth_admin'.
+#. TRANSLATORS: command description
+msgid "Remove package"
+msgstr "პაკეტის წაშლა"
+
+#. TRANSLATORS: The action of the package, in past tense
+msgid "Removed"
+msgstr "ამოღებულია"
+
+#. TRANSLATORS: The action of the package, in present tense
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Removing"
+msgstr "წაშლა"
+
+#. TRANSLATORS: transaction state, removing packages
+msgid "Removing packages"
+msgstr "პაკეტების წაშლა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Removing repository"
+msgstr "რეპოზიტორიის წაშლა"
+
+#. TRANSLATORS: transaction state, repackaging delta files
+msgid "Repackaging files"
+msgstr "ფაილების აწყობა"
+
+#. SECURITY:
+#. - Normal users require admin authentication to repair the system
+#. since this can make the system unbootable or stop other
+#. applications from working.
+msgid "Repair System"
+msgstr "სისტემის შეკეთება"
+
+#. TRANSLATORS: transaction state, requesting data from a server
+msgid "Requesting data"
+msgstr "მონაცემების მოთხოვნა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Resolving"
+msgstr "ამოხსნა"
+
+#. TRANSLATORS: transaction state, checking the transaction before we do it
+msgid "Resolving dependencies"
+msgstr "ურთიერთდამოკიდებულებების ამოხსნა"
 
 #. TRANSLATORS: details about the update, if the package
 #. * requires a restart
@@ -164,6 +725,55 @@ msgstr "შედეგები:"
 msgid "Role"
 msgstr "როლი"
 
+#. TRANSLATORS: Ask the user if we should run the similar command
+msgid "Run similar command:"
+msgstr "მსგავსი ბრძანების გაშვება:"
+
+#. TRANSLATORS: transaction state, just started
+msgid "Running"
+msgstr "გაშვებულია"
+
+#. TRANSLATORS: transaction state, we are running hooks before or after the
+#. transaction
+msgid "Running hooks"
+msgstr "დამხმარე პროცესების გაშვება"
+
+#. TRANSLATORS: transaction state, scanning for running processes
+msgid "Scanning applications"
+msgstr "აპლიკაციების სკაპირება"
+
+#. TRANSLATORS: command description
+msgid "Search by details"
+msgstr "დეტალებით ძებნა"
+
+#. TRANSLATORS: command description
+msgid "Search by files"
+msgstr "ფაილებით ძებნა"
+
+#. TRANSLATORS: command description
+msgid "Search by names"
+msgstr "სახელით ძებნა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Searching by details"
+msgstr "დეტალებით ძებნა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Searching by file"
+msgstr "ფაილით ძებნა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Searching by name"
+msgstr "სახელით ძებნა"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Searching groups"
+msgstr "ჯგუფების ძებნა"
+
+#. TRANSLATORS: The type of update
+msgid "Security"
+msgstr "უსაფრთხოება"
+
 #. TRANSLATORS: a package requires the session to be restarted
 #. * due to a security update
 msgid "Session restart (security) required:"
@@ -172,6 +782,56 @@ msgstr "სესიის გადატვირთვას (უსაფრ
 #. TRANSLATORS: a package requires the session to be restarted
 msgid "Session restart required:"
 msgstr "საჭიროა სესიის გადატვირთვა:"
+
+#. SECURITY:
+#. - Normal users do not require admin authentication to set the proxy
+#. used for downloading packages.
+msgid "Set network proxy"
+msgstr "ქსელური პროქსის დაყენება"
+
+#. TRANSLATORS: command description
+msgid "Set repository options"
+msgstr "რეპოზიტორიის პარამეტრების დაყენება"
+
+#. TRANSLATORS: command line argument, use a filter to narrow down results
+msgid "Set the filter, e.g. installed"
+msgstr "დააყენეთ ფილტრი. მაგალითად 'installed' (დაყენებული)"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Setting data"
+msgstr "მონაცემების დაყენება"
+
+#. TRANSLATORS: turn on all debugging
+msgid "Show debugging information for all files"
+msgstr "გამართვის ინფორმაციის ჩვენება ყველა ფაილისთვის"
+
+msgid "Show debugging options"
+msgstr "გამართვის პარამეტრების ჩვენება"
+
+#. TRANSLATORS: command line argument, just show the version string
+msgid "Show the program version and exit"
+msgstr "ვერსიის ჩვენება და გასვლა"
+
+#. TRANSLATORS: show version
+msgid "Show version and exit"
+msgstr "ვერსიის ჩვენება და გასვლა"
+
+#. TRANSLATORS: tell the user what we think the command is
+msgid "Similar command is:"
+msgstr "მსგავსი ბრძანებაა:"
+
+#. TRANSLATORS: show the user a list of commands that they could have meant
+#. TRANSLATORS: show the user a list of commands we could run
+msgid "Similar commands are:"
+msgstr "მსგავსი ბრძანებებია:"
+
+#. TRANSLATORS: the package repository name
+msgid "Software source name"
+msgstr "პროგრამის წყაროს სახელი"
+
+#. TRANSLATORS: transaction state, the daemon is in the process of starting
+msgid "Starting"
+msgstr "გაშვება"
 
 #. TRANSLATORS: details about the update, the ongoing state
 #. * of the update
@@ -182,9 +842,23 @@ msgstr "მდგომარეობა"
 msgid "Status"
 msgstr "მდგომარეობა"
 
+#. these are commands we can use with pkcon
+msgid "Subcommands:"
+msgstr "ქვებრძანებები:"
+
 #. TRANSLATORS: this is if the transaction succeeded or not
 msgid "Succeeded"
 msgstr "წარმატებით"
+
+#. TRANSLATORS: Show the user a list of packages that they can install to
+#. provide this command
+msgid "Suitable packages are:"
+msgstr "შესატყვისი პაკეტებია:"
+
+#. TRANSLATORS: this is any summary text describing the upgrade
+#. TRANSLATORS: this is the summary of the group
+msgid "Summary"
+msgstr "ჯამში"
 
 #. TRANSLATORS: a package requires the system to be restarted
 #. * due to a security update
@@ -200,18 +874,44 @@ msgstr "სისტემის გადატვირთვას ითხ�
 msgid "System time"
 msgstr "სისტემური დრო"
 
+#. TRANSLATORS: transaction state, when we're doing a test transaction
+msgid "Testing changes"
+msgstr "ცვლილებების ტესტირება"
+
+#. TRANSLATORS: the media description, usually like 'Fedora 12 disk 5'
+msgid "Text"
+msgstr "ტექსტი"
+
+#. TRANSLATORS: The user specified
+#. * an incorrect filter
+msgid "The filter specified was invalid"
+msgstr "მითითებული ფილტრი არასწორია"
+
+#. TRANSLATORS: The network settings could not be sent
+msgid "The proxy could not be set"
+msgstr "პროქსის დაყენება შეუძლებელია"
+
 #. TRANSLATORS: the transaction failed in a way we could
 #. * not expect
 #. TRANSLATORS: the transaction failed in a way we could not expect
 msgid "The transaction failed"
 msgstr "ტრანზაქცია ვერ შესრულდა"
 
+#. TRANSLATORS: the user asked to update everything,
+#. * but there is nothing that can be updated
+msgid "There are no packages to update."
+msgstr "განახლების პაკეტები არ არის."
+
 #. TRANSLATORS: print a message when there are no updates
 msgid "There are no updates available at this time."
-msgstr "ამ მომენტისთვის განახლებები არ არის"
+msgstr "ამ მომენტისთვის განახლებები არ არის."
 
 msgid "There are no upgrades available at this time."
-msgstr "ამ მომენტისთვის განახლებები არ არის"
+msgstr "ამ მომენტისთვის განახლებები არ არის."
+
+#. TRANSLATORS: this is the time since this role was used
+msgid "Time since"
+msgstr "გასული დრო"
 
 #. TRANSLATORS: this is an atomic transaction
 #. TRANSLATORS: the role is the point of the transaction,
@@ -219,12 +919,37 @@ msgstr "ამ მომენტისთვის განახლებე�
 msgid "Transaction"
 msgstr "ტრანზაქცია"
 
+#. TRANSLATORS: The type of update
+msgid "Trivial"
+msgstr "ტრივიალური"
+
 msgid "True"
 msgstr "ჭეშმარიტი"
 
 #. TRANSLATORS: this is type of update, stable or testing
 msgid "Type"
 msgstr "ტიპი"
+
+#. TRANSLATORS: The state of a package, i.e. not installed
+msgid "Unavailable"
+msgstr "მიუწვდომელია"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Unknown role type"
+msgstr "უცნობი როლის ტიპი"
+
+#. TRANSLATORS: This is when the transaction status is not known
+msgid "Unknown state"
+msgstr "უცნობი მდგომარეობა"
+
+#. SECURITY:
+#. - Normal users do not require admin authentication to update the
+#. system as the packages will be signed, and the action is required
+#. to update the system when unattended.
+#. - Changing this to anything other than 'yes' will break unattended
+#. updates.
+msgid "Update software"
+msgstr "პროგრამების განახლება"
 
 #. TRANSLATORS: details about the update, any description of
 #. * the update
@@ -236,6 +961,30 @@ msgstr "განახლების ტექსტი"
 #. TRANSLATORS: The action of the package, in past tense
 msgid "Updated"
 msgstr "განახლდა"
+
+#. TRANSLATORS: details about the update, any packages that
+#. * this update updates
+msgid "Updates"
+msgstr "განახლებები"
+
+#. TRANSLATORS: The action of the package, in present tense
+msgid "Updating"
+msgstr "განახლება"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+msgid "Updating packages"
+msgstr "პაკეტების განახლება"
+
+#. TRANSLATORS: transaction state, we are updating the list of processes
+msgid "Updating running applications"
+msgstr "გაშვებული პროგრამების განახლება"
+
+#. SECURITY:
+#. - Normal users require admin authentication to upgrade the disto as
+#. this can make the system unbootable or stop other applications from
+#. working.
+msgid "Upgrade System"
+msgstr "სისტემის განახლება"
 
 #. TRANSLATORS: this is the user ID of the user that started the action
 msgid "User ID"
@@ -249,3 +998,23 @@ msgstr "მომხმარებლის სახელი"
 #. TRANSLATORS: the vendor (e.g. vmware) that is providing the EULA
 msgid "Vendor"
 msgstr "მომწოდებელი"
+
+#. TRANSLATORS: transaction state, waiting for user to type in a password
+msgid "Waiting for authentication"
+msgstr "ავთენტიკაციის მოლოდინი"
+
+#. TRANSLATORS: transaction state, when we're waiting for the native tools to
+#. exit
+msgid "Waiting for package manager lock"
+msgstr "პაკეტების მმართველის ბლოკის მოლოდინი"
+
+#. TRANSLATORS: transaction state, the transaction is waiting for another to
+#. complete
+msgid "Waiting in queue"
+msgstr "რიგში მოლოდინი"
+
+#. TRANSLATORS: the prefix of all the output telling the user
+#. * why it's not executing. NOTE: this is lowercase to mimic
+#. * the style of bash itself -- apologies
+msgid "command not found"
+msgstr "ბრძანება ვერ ვიპოვე"

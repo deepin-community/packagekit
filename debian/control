@@ -4,11 +4,12 @@ Priority: optional
 Maintainer: Matthias Klumpp <mak@debian.org>
 Uploaders: Julian Andres Klode <jak@debian.org>
 Build-Depends: bash-completion,
-               debhelper-compat (= 12),
+               debhelper-compat (= 13),
                gir1.2-glib-2.0 (>= 1.36),
                gobject-introspection (>= 1.36),
+               gobject-introspection-bin,
                gtk-doc-tools,
-               libappstream-dev (>= 0.12),
+               libappstream-dev (>= 0.16.0),
                libapt-pkg-dev (>= 1.9.2),
                libarchive-dev,
                libgirepository1.0-dev (>= 1.36),
@@ -20,10 +21,12 @@ Build-Depends: bash-completion,
                libsqlite3-dev,
                libsystemd-dev (>= 214) [linux-any],
                meson (>= 0.50),
-               pkg-config,
-               policykit-1,
+               pkgconf,
+               polkitd,
+               systemd-dev [linux-any],
                valac
-Standards-Version: 4.6.0
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
 Homepage: https://www.freedesktop.org/software/PackageKit/
 Vcs-Git: https://salsa.debian.org/pkgutopia-team/packagekit.git
 Vcs-Browser: https://salsa.debian.org/pkgutopia-team/packagekit
@@ -32,20 +35,13 @@ Package: packagekit
 Architecture: any
 Multi-Arch: foreign
 Depends: libglib2.0-bin,
-         policykit-1,
+         polkitd,
          ${misc:Depends},
          ${shlibs:Depends}
-Breaks: libpackagekit-glib2-14 (<= 0.7.6-4),
-        libpackagekit-qt2-2 (<= 0.7.6-4),
-        packagekit-backend-apt (<< 1.0),
-        packagekit-backend-aptcc (<< 1.0),
-        packagekit-backend-smart (<< 1.0),
-        packagekit-offline-update (<< 1.0),
-        packagekit-plugin-click (<= 0.3.1),
-        plymouth (<< 0.9.5)
-Recommends: packagekit-tools,
+Breaks: plymouth (<< 0.9.5)
+Recommends: appstream,
+            packagekit-tools,
             systemd
-Suggests: appstream
 Description: Provides a package management service
  PackageKit allows performing simple software management tasks over a DBus
  interface e.g. refreshing the cache, updating, installing and removing
@@ -55,10 +51,10 @@ Description: Provides a package management service
  the corresponding distribution. PackageKit is not meant to replace
  advanced tools like Synaptic.
  .
- The main benefits are:
-  - unified interface on several distributions
-  - fine grained privileges by using PolicyKit
-  - independency from a running desktop session during the processing
+ Its main benefits are:
+  - Unified developer and user interface on many distributions
+  - Fine-grained permission control via PolicyKit
+  - On-demand installation of missing system components
 
 Package: packagekit-tools
 Architecture: any
@@ -89,10 +85,8 @@ Package: libpackagekit-glib2-18
 Architecture: any
 Section: libs
 Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Recommends: packagekit (= ${binary:Version})
 Description: Library for accessing PackageKit using GLib
  PackageKit allows performing simple software management tasks over a DBus
  interface e.g. refreshing the cache, updating, installing and removing
@@ -107,7 +101,7 @@ Section: libdevel
 Architecture: any
 Depends: gir1.2-packagekitglib-1.0 (= ${binary:Version}),
          libdbus-1-dev,
-         libglib2.0-dev (>= 2.26),
+         libglib2.0-dev,
          libpackagekit-glib2-18 (= ${binary:Version}),
          libsqlite3-dev,
          ${misc:Depends}
@@ -139,10 +133,10 @@ Description: GObject introspection data for the PackageKit GLib library
 Package: packagekit-gtk3-module
 Architecture: any
 Section: libs
+Multi-Arch: same
 Depends: ${misc:Depends},
          ${shlibs:Depends}
-Recommends: gnome-software | apper
-Breaks: gnome-packagekit (<< 3.2.1-1)
+Recommends: gnome-software | apper | packagekit-installer
 Description: Install fonts automatically using PackageKit
  PackageKit allows performing simple software management tasks over a DBus
  interface e.g. refreshing the cache, updating, installing and removing
@@ -159,7 +153,7 @@ Depends: packagekit (= ${binary:Version}),
          ${shlibs:Depends}
 Conflicts: gstreamer0.10-packagekit
 Replaces: gstreamer0.10-packagekit
-Recommends: gnome-software | apper
+Recommends: gnome-software | apper | packagekit-installer
 Description: GStreamer plugin to install codecs using PackageKit
  PackageKit allows performing simple software management tasks over a DBus
  interface e.g refreshing the cache, updating, installing and removing

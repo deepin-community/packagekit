@@ -4,12 +4,12 @@
 #
 # Translators:
 # Richard Hughes <richard@hughsie.com>, 2011
-# Yuri Chornoivan <yurchor@ukr.net>, 2009-2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2009-2018,2022
 msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Ukrainian (http://www.transifex.com/freedesktop/packagekit/language/uk/)\n"
+"Language-Team: Ukrainian (http://app.transifex.com/freedesktop/packagekit/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -177,9 +177,6 @@ msgstr "Для оновлення списку сховищ системи сл�
 msgid "Authentication is required to reinstall software"
 msgstr "Для повторного встановлення програмного забезпечення слід пройти розпізнавання"
 
-msgid "Authentication is required to reload the device with a new driver"
-msgstr "Для перезавантаження пристрою з новим драйвером слід пройти розпізнавання"
-
 msgid "Authentication is required to remove software"
 msgstr "Для вилучення програмного забезпечення слід пройти розпізнавання"
 
@@ -305,6 +302,9 @@ msgstr "Такої команди не знайдено, коректні ком
 #. database
 msgid "Committing changes"
 msgstr "Застосування змін"
+
+msgid "Config file was not found."
+msgstr "Файл налаштувань не знайдено."
 
 #. TRANSLATORS: transaction state, we are copying package files before or
 #. after the transaction
@@ -468,9 +468,19 @@ msgstr "Не вдалося встановити пакунки"
 msgid "Failed to launch:"
 msgstr "Не вдалося запустити:"
 
+#. TRANSLATORS: The placeholder is an error message
+#, c-format
+msgid "Failed to load config file: %s"
+msgstr "Не вдалося завантажити файл налаштувань: %s"
+
 #. TRANSLATORS: cannot load the backend the user specified
 msgid "Failed to load the backend"
 msgstr "Не вдалося завантажити модуль обробки"
+
+#. TRANSLATORS: cannot load the backend the user specified
+#, c-format
+msgid "Failed to load the backend: %s"
+msgstr "Не вдалося завантажити модуль обробки: %s"
 
 #. TRANSLATORS: probably not yet installed
 msgid "Failed to load the config file"
@@ -483,6 +493,12 @@ msgstr "Не вдалося обробити аргументи"
 #. TRANSLATORS: we failed to contact the daemon
 msgid "Failed to parse command line"
 msgstr "Не вдалося виконати обробку рядка команди"
+
+#. TRANSLATORS: The placeholder is an error message.
+#. * `auto` is a potential value of the DefaultBackend= configuration key.
+#, c-format
+msgid "Failed to resolve auto: %s"
+msgstr "Не вдалося розв'язати авто: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
 msgid "Failed to search for file"
@@ -599,7 +615,7 @@ msgstr "Встановлення вже встановленого пакунк�
 
 #. SECURITY
 #. - Normal users require admin authentication to downgrade packages.
-#. - User authorized to dowgrade signed packages is authorized to install
+#. - User authorized to downgrade signed packages is authorized to install
 #. them as well.
 #. - If a package in question is not trusted, user's permission to install
 #. untrusted package will be checked as well.
@@ -617,10 +633,10 @@ msgid "Install package '%s' to provide command '%s'?"
 msgstr "Встановити пакунок «%s», щоб забезпечити виконання команди «%s»?"
 
 #. SECURITY:
-#. - Normal users do not need authentication to install signed packages
-#. from signed repositories, as this cannot exploit a system.
-#. - Paranoid users (or parents!) can change this to 'auth_admin' or
-#. 'auth_admin_keep'.
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
 msgid "Install signed package"
 msgstr "Встановлення підписаного пакунка"
 
@@ -926,15 +942,6 @@ msgid "Reinstalling"
 msgstr "Перевстановлення"
 
 #. SECURITY:
-#. - Normal users require admin authentication to rebind a driver
-#. so that it works after we install firmware.
-#. - This should not be set to 'yes' as unprivileged users could then
-#. try to rebind drivers in use, for instance security authentication
-#. devices.
-msgid "Reload a device"
-msgstr "Перезавантаження пристрою"
-
-#. SECURITY:
 #. - Normal users require admin authentication to remove packages as
 #. this can make the system unbootable or stop other applications from
 #. working.
@@ -1216,10 +1223,6 @@ msgstr "Наведені нижче пакунки буде вилучено:"
 msgid "The following packages have to be updated:"
 msgstr "Слід оновити такі пакунки:"
 
-#. TRANSLATORS: command line argument, just output without fancy formatting
-msgid "The maximum metadata cache age. Use -1 for 'never'."
-msgstr "Максимальна тривалість зберігання кешу метаданих. Значення -1 відповідає зняттю обмежень на тривалість."
-
 #. TRANSLATORS: tell the user what package provides the command
 msgid "The package providing this file is:"
 msgstr "Пакунком, що містити цей файл є:"
@@ -1227,6 +1230,11 @@ msgstr "Пакунком, що містити цей файл є:"
 #. TRANSLATORS: The network settings could not be sent
 msgid "The proxy could not be set"
 msgstr "Не вдалося встановити параметри проксі-сервера"
+
+#. TRANSLATORS: There was an error finding a package
+#. * for installation, it may already be installed.
+msgid "The selected packages may already be installed."
+msgstr "Можливо, вибрані пакунки вже встановлено."
 
 #. TRANSLATORS: tell the user we've not done anything
 msgid "The signature was not accepted."
@@ -1274,8 +1282,12 @@ msgstr "На поточний момент оновлень не виявлен�
 msgid "This tool could not find all the packages: %s"
 msgstr "Програмі не вдалося знайти всі пакунки: %s"
 
-#. TRANSLATORS: There was an error getting the list
-#. * of files for the package. The detailed error follows
+#. TRANSLATORS: We were unable to find a package for installation.
+msgid "This tool could not find any available package."
+msgstr "Програмі не вдалося знайти жодного доступного пакунка."
+
+#. TRANSLATORS: There was an error finding a package
+#. * for installation. The detailed error follows.
 #, c-format
 msgid "This tool could not find any available package: %s"
 msgstr "Програмі не вдалося знайти жодного доступного пакунка: %s"

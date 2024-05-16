@@ -5,7 +5,9 @@ DEB_HOST_ARCH_OS ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 # Use this variable to set the PackageKit configure flags
-PK_CONFIGURE_FLAGS = -Dpackaging_backend=aptcc \
+PK_CONFIGURE_FLAGS = \
+			-Ddaemon_tests=false \
+			-Dpackaging_backend=apt \
 			-Dsystemd=true \
 			-Doffline_update=true \
 			-Dgobject_introspection=true \
@@ -20,6 +22,8 @@ PK_CONFIGURE_FLAGS = -Dpackaging_backend=aptcc \
 
 ifneq ($(DEB_HOST_ARCH_OS), linux)
 	PK_CONFIGURE_FLAGS += -Dsystemd=false -Doffline_update=false
+else
+	export deb_systemdsystemunitdir = $(shell pkg-config --variable=systemdsystemunitdir systemd | sed s,^/,,)
 endif
 
 LDFLAGS += -Wl,--as-needed
@@ -31,17 +35,13 @@ INSTALLDIR = $(CURDIR)/debian/tmp
 	dh $@ --with gir
 
 extrainstallfiles-stamp:
-	grep -E -v 'lib/systemd|pk-offline-update|pk-debconf-helper' debian/packagekit.install > debian/packagekit.install.kfreebsd
-	grep -E -v 'lib/systemd|pk-offline-update|pk-debconf-helper' debian/packagekit.install > debian/packagekit.install.hurd
+	grep -E -v 'systemdsystemunitdir|pk-offline-update|pk-debconf-helper' debian/packagekit.install > debian/packagekit.install.kfreebsd
+	grep -E -v 'systemdsystemunitdir|pk-offline-update|pk-debconf-helper' debian/packagekit.install > debian/packagekit.install.hurd
 	touch $@
 
 override_dh_auto_configure:
 	cp -dpr $(CURDIR)/docs/api $(CURDIR)/docs/api.orig
 	dh_auto_configure -- $(PK_CONFIGURE_FLAGS)
-
-# The testsuite needs some manual interaction and a special
-# setup for the daemon to work, so we don't run it during build.
-override_dh_auto_test:
 
 override_dh_auto_install:
 	dh_auto_install --destdir=$(INSTALLDIR)
@@ -61,9 +61,6 @@ endif
 override_dh_install: extrainstallfiles-stamp
 	dh_install
 
-override_dh_missing:
-	dh_missing --fail-missing
-
 override_dh_makeshlibs:
 	dh_makeshlibs -Xlibpk-gtk-module -Xlibpk_
 	dh_girepository
@@ -78,6 +75,11 @@ override_dh_gencontrol:
 	dh_gencontrol -- $(SUBSTVARS)
 
 override_dh_installsystemd:
-	# the offline-updates service is enabled by tools like GNOME-Software when they need it,
-	# but we do want to clear leftover symlinks upon removal of the package.
-	dh_installsystemd --no-enable --no-start --no-restart-after-upgrade
+	# We don't want to stop/restart the packagekit service and especially not the
+	# packagekit-offline-update service, as PackageKit might be performing the
+	# package upgrade right now and would kill the running APT/dpkg transaction,
+	# leaving the system in a broken state.
+	# The PackageKit daemon is fine with being upgraded while running, and we do
+	# send it the `SuggestDaemonQuit` command to have it reload itself when it is
+	# able to (ensuring it doesn't crash after ejecting the backend and reloading it).
+	dh_installsystemd --no-start --no-restart-after-upgrade --no-stop-on-upgrade
