@@ -36,6 +36,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_client_get_details_async@Base 0.9.4
  pk_client_get_details_local@Base 0.9.4
  pk_client_get_details_local_async@Base 0.9.4
+ pk_client_get_details_with_deps_size@Base 1.2.7
  pk_client_get_distro_upgrades@Base 0.9.4
  pk_client_get_distro_upgrades_async@Base 0.9.4
  pk_client_get_files@Base 0.9.4
@@ -98,6 +99,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_client_search_names_async@Base 0.9.4
  pk_client_set_background@Base 0.9.4
  pk_client_set_cache_age@Base 0.9.4
+ pk_client_set_details_with_deps_size@Base 1.2.7
  pk_client_set_interactive@Base 0.9.4
  pk_client_set_locale@Base 0.9.4
  pk_client_state_get_type@Base 1.2.4
@@ -233,9 +235,12 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_offline_auth_trigger@Base 1.0.0
  pk_offline_auth_trigger_upgrade@Base 1.1.0
  pk_offline_cancel@Base 1.0.0
+ pk_offline_cancel_with_flags@Base 1.2.5
  pk_offline_clear_results@Base 1.0.0
+ pk_offline_clear_results_with_flags@Base 1.2.5
  pk_offline_error_get_type@Base 1.0.0
  pk_offline_error_quark@Base 1.0.0
+ pk_offline_flags_get_type@Base 1.2.5
  pk_offline_get_action@Base 1.0.0
  pk_offline_get_action_monitor@Base 1.0.0
  pk_offline_get_prepared_ids@Base 1.0.0
@@ -249,6 +254,8 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_offline_get_results_mtime@Base 1.0.0
  pk_offline_trigger@Base 1.0.0
  pk_offline_trigger_upgrade@Base 1.1.0
+ pk_offline_trigger_upgrade_with_flags@Base 1.2.5
+ pk_offline_trigger_with_flags@Base 1.2.5
  pk_package_equal@Base 0.9.4
  pk_package_equal_id@Base 0.9.4
  pk_package_get_arch@Base 0.9.4
@@ -326,6 +333,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_progress_get_percentage@Base 1.1.0
  pk_progress_get_remaining_time@Base 1.1.0
  pk_progress_get_role@Base 1.1.0
+ pk_progress_get_sender@Base 1.2.6
  pk_progress_get_speed@Base 1.1.0
  pk_progress_get_status@Base 1.1.0
  pk_progress_get_transaction_flags@Base 1.1.0
@@ -343,6 +351,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_progress_set_percentage@Base 0.9.4
  pk_progress_set_remaining_time@Base 0.9.4
  pk_progress_set_role@Base 0.9.4
+ pk_progress_set_sender@Base 1.2.6
  pk_progress_set_speed@Base 0.9.4
  pk_progress_set_status@Base 0.9.4
  pk_progress_set_transaction_flags@Base 0.9.4

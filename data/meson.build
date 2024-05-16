@@ -9,7 +9,7 @@ dbus_config_data.set('libexecdir', join_paths(get_option('prefix'), get_option('
 
 dbus_sys_dir = get_option('dbus_sys')
 if dbus_sys_dir == ''
-  dbus_sys_dir = join_paths(get_option('sysconfdir'), 'dbus-1', 'system.d')
+  dbus_sys_dir = join_paths(get_option('datadir'), 'dbus-1', 'system.d')
 endif
 
 configure_file(
@@ -51,7 +51,32 @@ if get_option('systemd')
       install: true,
       install_dir: systemd_system_unit_dir,
     )
+
+    if meson.version().version_compare('>=0.61')
+        install_symlink(
+            'packagekit-offline-update.service',
+            pointing_to: '..' / 'packagekit-offline-update.service',
+            install_dir: systemd_system_unit_dir / 'system-update.target.wants'
+        )
+    endif
   endif
+endif
+
+# Validate & install MetaInfo file
+metainfo_file = files('org.freedesktop.packagekit.metainfo.xml')
+install_data(
+  metainfo_file,
+  install_dir:join_paths(get_option('datadir'), 'metainfo'),
+)
+ascli_exe = find_program('appstreamcli', required: false)
+if ascli_exe.found()
+  test('validate metainfo file',
+        ascli_exe,
+        args: ['validate',
+               '--no-net',
+               '--pedantic',
+               metainfo_file]
+  )
 endif
 
 install_data(

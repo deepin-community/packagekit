@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Friulian (http://www.transifex.com/freedesktop/packagekit/language/fur/)\n"
+"Language-Team: Friulian (http://app.transifex.com/freedesktop/packagekit/language/fur/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -175,9 +175,6 @@ msgstr "La autenticazion e je necessarie par inzornâ i dipuesits di sisteme"
 
 msgid "Authentication is required to reinstall software"
 msgstr "La autenticazion e je necessarie par tornâ a instalâ software"
-
-msgid "Authentication is required to reload the device with a new driver"
-msgstr "La autenticazion e je necessarie par tornâ a cjariâ il dispositîf cuntun gnûf driver"
 
 msgid "Authentication is required to remove software"
 msgstr "La autenticazion e je necessarie par gjavâ software"
@@ -598,7 +595,7 @@ msgstr "Torne instale il pachet za instalât"
 
 #. SECURITY
 #. - Normal users require admin authentication to downgrade packages.
-#. - User authorized to dowgrade signed packages is authorized to install
+#. - User authorized to downgrade signed packages is authorized to install
 #. them as well.
 #. - If a package in question is not trusted, user's permission to install
 #. untrusted package will be checked as well.
@@ -616,10 +613,10 @@ msgid "Install package '%s' to provide command '%s'?"
 msgstr "Instalâ il pachet '%s' che al furnìs il comant '%s'?"
 
 #. SECURITY:
-#. - Normal users do not need authentication to install signed packages
-#. from signed repositories, as this cannot exploit a system.
-#. - Paranoid users (or parents!) can change this to 'auth_admin' or
-#. 'auth_admin_keep'.
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
 msgid "Install signed package"
 msgstr "Instale pachet firmât"
 
@@ -925,15 +922,6 @@ msgid "Reinstalling"
 msgstr "Si torne a instalâ"
 
 #. SECURITY:
-#. - Normal users require admin authentication to rebind a driver
-#. so that it works after we install firmware.
-#. - This should not be set to 'yes' as unprivileged users could then
-#. try to rebind drivers in use, for instance security authentication
-#. devices.
-msgid "Reload a device"
-msgstr "Torne cjarie un dispositîf"
-
-#. SECURITY:
 #. - Normal users require admin authentication to remove packages as
 #. this can make the system unbootable or stop other applications from
 #. working.
@@ -1215,10 +1203,6 @@ msgstr "I pachets chi sot a son stâts gjavâts:"
 msgid "The following packages have to be updated:"
 msgstr "I pachets chi sot a son stâts inzornâts:"
 
-#. TRANSLATORS: command line argument, just output without fancy formatting
-msgid "The maximum metadata cache age. Use -1 for 'never'."
-msgstr "La etât massime de cache dai metadâts. Dopre -1 par 'mai'."
-
 #. TRANSLATORS: tell the user what package provides the command
 msgid "The package providing this file is:"
 msgstr "Il pachet che al furnìs chest file al è:"
@@ -1273,8 +1257,8 @@ msgstr "Pal moment no son avanzaments di version disponibii."
 msgid "This tool could not find all the packages: %s"
 msgstr "Chest strument nol à podût cjatâ ducj i pachets: %s"
 
-#. TRANSLATORS: There was an error getting the list
-#. * of files for the package. The detailed error follows
+#. TRANSLATORS: There was an error finding a package
+#. * for installation. The detailed error follows.
 #, c-format
 msgid "This tool could not find any available package: %s"
 msgstr "Chest strument nol à podût cjatâ cualsisei pachet disponibil: %s"

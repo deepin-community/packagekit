@@ -973,12 +973,12 @@ pk_console_resolve_packages (PkConsoleCtx *ctx, gchar **packages, GError **error
 static gboolean
 pk_console_install_packages (PkConsoleCtx *ctx, gchar **packages, GError **error)
 {
-	guint i;
 	g_autoptr(GError) error_local = NULL;
 	g_auto(GStrv) package_ids = NULL;
+	gboolean reinstall_allowed = FALSE;
 
 	/* test to see if we've been given files, not packages */
-	for (i = 0; packages[i] != NULL; i++) {
+	for (guint i = 0; packages[i] != NULL; i++) {
 		if (g_file_test (packages[i], G_FILE_TEST_EXISTS)) {
 			g_set_error (error,
 				     PK_CONSOLE_ERROR,
@@ -993,6 +993,8 @@ pk_console_install_packages (PkConsoleCtx *ctx, gchar **packages, GError **error
 		}
 	}
 
+	reinstall_allowed = pk_task_get_allow_reinstall (PK_TASK (ctx->task));
+
 	/* assume arch filter unless specified otherwise */
 	if (!pk_bitfield_contain (ctx->filters, PK_FILTER_ENUM_ARCH) &&
 	    !pk_bitfield_contain (ctx->filters, PK_FILTER_ENUM_NOT_ARCH))
@@ -1003,18 +1005,51 @@ pk_console_install_packages (PkConsoleCtx *ctx, gchar **packages, GError **error
 	    !pk_bitfield_contain (ctx->filters, PK_FILTER_ENUM_NOT_SOURCE))
 		pk_bitfield_add (ctx->filters, PK_FILTER_ENUM_NOT_SOURCE);
 
-	pk_bitfield_add (ctx->filters, PK_FILTER_ENUM_NOT_INSTALLED);
 	pk_bitfield_add (ctx->filters, PK_FILTER_ENUM_NEWEST);
+	if (!reinstall_allowed)
+		pk_bitfield_add (ctx->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+
 	package_ids = pk_console_resolve_packages (ctx, packages, &error_local);
 	if (package_ids == NULL) {
-		g_set_error (error,
-			     PK_CONSOLE_ERROR,
-			     PK_ERROR_ENUM_INTERNAL_ERROR,
-			     /* TRANSLATORS: There was an error getting the list
-			      * of files for the package. The detailed error follows */
-			     _("This tool could not find any available package: %s"),
-			     error_local->message);
-		ctx->retval = PK_EXIT_CODE_FILE_NOT_FOUND;
+		/* the the error was not "no package found", or we did allow reinstallations
+		 * (and therefore didn't filter out already installed packages) we show the
+		 * emitted error immediately. */
+		if (!g_error_matches (error_local, PK_CONSOLE_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND) ||
+		     reinstall_allowed) {
+			g_set_error (error,
+				     PK_CONSOLE_ERROR,
+				     PK_ERROR_ENUM_INTERNAL_ERROR,
+				     /* TRANSLATORS: There was an error finding a package
+				      * for installation. The detailed error follows. */
+				     _("This tool could not find any available package: %s"),
+				     error_local->message);
+			ctx->retval = PK_EXIT_CODE_FILE_NOT_FOUND;
+			return FALSE;
+		}
+
+		/* If we are here, the package may exist, but may already be installed.
+		 * Check for that to provide a better error */
+		pk_bitfield_remove (ctx->filters, PK_FILTER_ENUM_NOT_INSTALLED);
+		pk_bitfield_add (ctx->filters, PK_FILTER_ENUM_INSTALLED);
+		package_ids = pk_console_resolve_packages (ctx, packages, NULL);
+		if (package_ids == NULL) {
+			/* the package does not exist at all */
+			g_set_error_literal (error,
+					     PK_CONSOLE_ERROR,
+					     PK_ERROR_ENUM_INTERNAL_ERROR,
+					     /* TRANSLATORS: We were unable to find a package for installation. */
+					     _("This tool could not find any available package."));
+			ctx->retval = PK_EXIT_CODE_FILE_NOT_FOUND;
+		} else {
+			/* the package exists, but is already installed */
+			g_set_error_literal (error,
+				     PK_CONSOLE_ERROR,
+				     PK_ERROR_ENUM_INTERNAL_ERROR,
+				     /* TRANSLATORS: There was an error finding a package
+				      * for installation, it may already be installed. */
+				     _("The selected packages may already be installed."));
+			ctx->retval = PK_EXIT_CODE_NOTHING_USEFUL;
+		}
 		return FALSE;
 	}
 
@@ -1415,7 +1450,7 @@ pk_console_get_summary (PkConsoleCtx *ctx)
 	if (pk_bitfield_contain (ctx->roles, PK_ROLE_ENUM_REMOVE_PACKAGES))
 		g_string_append_printf (string, "  %s\n", "remove [package]");
 	if (pk_bitfield_contain (ctx->roles, PK_ROLE_ENUM_UPDATE_PACKAGES))
-		g_string_append_printf (string, "  %s\n", "update <package>");
+		g_string_append_printf (string, "  %s\n", "update [package]");
 	if (pk_bitfield_contain (ctx->roles, PK_ROLE_ENUM_REFRESH_CACHE))
 		g_string_append_printf (string, "  %s\n", "refresh [force]");
 	if (pk_bitfield_contain (ctx->roles, PK_ROLE_ENUM_RESOLVE))
@@ -1604,7 +1639,7 @@ main (int argc, char *argv[])
 	g_autofree gchar *filter = NULL;
 	g_autofree gchar *options_help = NULL;
 	g_autofree gchar *summary = NULL;
-	guint bar_padding = 30;
+	guint bar_padding = 40;
 	guint bar_size = 25;
 	struct winsize w;
 
@@ -1636,7 +1671,7 @@ main (int argc, char *argv[])
 			_("Print to screen a machine readable output, rather than using animated widgets"), NULL},
 		{ "cache-age", 'c', 0, G_OPTION_ARG_INT, &cache_age,
 			/* TRANSLATORS: command line argument, just output without fancy formatting */
-			_("The maximum metadata cache age. Use -1 for 'never'."), NULL},
+			_("The maximum metadata cache age (in seconds). Use -1 to use only cache, 1 to reload cache."), NULL},
 		{ "allow-untrusted", '\0', 0, G_OPTION_ARG_NONE, &allow_untrusted,
 			/* command line argument, do we ask questions */
 			_("Allow untrusted packages to be installed."), NULL },
@@ -2283,14 +2318,14 @@ main (int argc, char *argv[])
 	} else if (strcmp (mode, "offline-trigger") == 0) {
 
 		run_mainloop = FALSE;
-		ret = pk_offline_trigger (PK_OFFLINE_ACTION_REBOOT, NULL, &error);
+		ret = pk_offline_trigger_with_flags (PK_OFFLINE_ACTION_REBOOT, PK_OFFLINE_FLAGS_INTERACTIVE, NULL, &error);
 		if (!ret)
 			ctx->retval = error->code;
 
 	} else if (strcmp (mode, "offline-cancel") == 0) {
 
 		run_mainloop = FALSE;
-		ret = pk_offline_cancel (NULL, &error);
+		ret = pk_offline_cancel_with_flags (PK_OFFLINE_FLAGS_INTERACTIVE, NULL, &error);
 		if (!ret)
 			ctx->retval = error->code;
 

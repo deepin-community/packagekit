@@ -154,7 +154,7 @@ pk_test_offline_func (void)
 	g_assert_cmpstr (data, ==, "powertop;1.8-1.fc8;i386;fedora");
 
 	/* trigger */
-	ret = pk_offline_trigger (PK_OFFLINE_ACTION_REBOOT, NULL, &error);
+	ret = pk_offline_trigger_with_flags (PK_OFFLINE_ACTION_REBOOT, PK_OFFLINE_FLAGS_INTERACTIVE, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ret);
 	g_assert (g_file_test (PK_OFFLINE_PREPARED_FILENAME, G_FILE_TEST_EXISTS));
@@ -163,7 +163,7 @@ pk_test_offline_func (void)
 	g_assert (!g_file_test (PK_OFFLINE_RESULTS_FILENAME, G_FILE_TEST_EXISTS));
 
 	/* cancel the trigger */
-	ret = pk_offline_cancel (NULL, &error);
+	ret = pk_offline_cancel_with_flags (PK_OFFLINE_FLAGS_INTERACTIVE, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ret);
 	g_assert (g_file_test (PK_OFFLINE_PREPARED_FILENAME, G_FILE_TEST_EXISTS));
@@ -189,7 +189,7 @@ pk_test_client_helper_output_cb (GSocket *socket, GIOCondition condition, gpoint
 {
 	GError *error = NULL;
 	gsize len;
-	gchar buffer[6];
+	gchar buffer[6] = {0};
 	gboolean ret = TRUE;
 
 	/* the helper process exited */
@@ -206,8 +206,7 @@ pk_test_client_helper_output_cb (GSocket *socket, GIOCondition condition, gpoint
 		g_assert_cmpint (len, >, 0);
 
 		/* good for us */
-		if (buffer != NULL &&
-		    strncmp (buffer, "pong\n", len) == 0) {
+		if (strncmp (buffer, "pong\n", len) == 0) {
 			_g_test_loop_quit ();
 			goto out;
 		}

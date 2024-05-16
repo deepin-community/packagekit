@@ -1,6 +1,7 @@
 add_languages('cpp')
 
 curl_dep = meson.get_compiler('c').find_library('curl')
+bzip2_dep = dependency('bzip2')
 
 packagekit_backend_slack_module = shared_module(
   'pk_backend_slack',
@@ -15,10 +16,11 @@ packagekit_backend_slack_module = shared_module(
     packagekit_glib2_dep,
     curl_dep,
     gmodule_dep,
+	sqlite3_dep,
+	bzip2_dep,
   ],
   cpp_args: [
     '-DG_LOG_DOMAIN="PackageKit-Slackware"',
-    '-DPK_COMPILATION=1',
     '-DLOCALSTATEDIR="@0@"'.format(join_paths(get_option('prefix'), get_option('localstatedir'))),
     '-DLIBDIR="@0@"'.format(join_paths(get_option('prefix'), get_option('libdir'))),
     '-DSYSCONFDIR="@0@"'.format(get_option('sysconfdir')),

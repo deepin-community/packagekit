@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Tamil (http://www.transifex.com/freedesktop/packagekit/language/ta/)\n"
+"Language-Team: Tamil (http://app.transifex.com/freedesktop/packagekit/language/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -124,9 +124,6 @@ msgstr "EULAவை ஏற்பதற்கு அங்கீகாரம் �
 
 msgid "Authentication is required to cancel a task that was not started by yourself"
 msgstr "உங்களால் துவங்கப்படாத பணியை ரத்துச் செய்ய அங்கீகாரம் தேவைப்படுகிறது"
-
-msgid "Authentication is required to reload the device with a new driver"
-msgstr "சாதனம் ஒரு புதிய இயக்கியுடன் மீளேற்ற அங்கீகாரம் தேவை"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
 msgid "Available"
@@ -441,10 +438,10 @@ msgid "Install package '%s' to provide command '%s'?"
 msgstr "'%s' கட்டளை வழங்குவதற்கு '%s' தொகுப்பை நிறுவு?"
 
 #. SECURITY:
-#. - Normal users do not need authentication to install signed packages
-#. from signed repositories, as this cannot exploit a system.
-#. - Paranoid users (or parents!) can change this to 'auth_admin' or
-#. 'auth_admin_keep'.
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
 msgid "Install signed package"
 msgstr "பையெமுத்திடப்பட்ட தொகுப்பை நிறுவு"
 
@@ -675,15 +672,6 @@ msgstr "மறு நிறுவப்பட்டது"
 #. TRANSLATORS: The action of the package, in present tense
 msgid "Reinstalling"
 msgstr "மீண்டும் நிநிறுவுகிற.."
-
-#. SECURITY:
-#. - Normal users require admin authentication to rebind a driver
-#. so that it works after we install firmware.
-#. - This should not be set to 'yes' as unprivileged users could then
-#. try to rebind drivers in use, for instance security authentication
-#. devices.
-msgid "Reload a device"
-msgstr "ஒரு சாதனத்தை மீளேற்று"
 
 #. SECURITY:
 #. - Normal users require admin authentication to remove packages as
@@ -964,8 +952,8 @@ msgstr "இந்த முறை மேம்படுத்தல்கள் 
 msgid "This tool could not find all the packages: %s"
 msgstr "இந்த கருவி அனைத்து தொகுப்புகளையும் தேட முடியவில்லை: %s"
 
-#. TRANSLATORS: There was an error getting the list
-#. * of files for the package. The detailed error follows
+#. TRANSLATORS: There was an error finding a package
+#. * for installation. The detailed error follows.
 #, c-format
 msgid "This tool could not find any available package: %s"
 msgstr "இந்த கருவி இருக்கும் தொகுப்பை தேட முடியவில்லை: %s"

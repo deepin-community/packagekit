@@ -1,6 +1,6 @@
 add_languages('cpp')
 
-zypp_dep = dependency('libzypp', version: '>=6.16.0')
+zypp_dep = dependency('libzypp', version: '>=17.31.0')
 
 # define if libzypp returns package size in bytes
 zypp_args = []
@@ -18,11 +18,11 @@ shared_module(
     gmodule_dep,
   ],
   cpp_args: [
-    '-DPK_COMPILATION=1',
     '-DG_LOG_DOMAIN="PackageKit-Zypp"',
     '-Wall',
     '-Woverloaded-virtual',
-    '-Wnon-virtual-dtor'
+    '-Wnon-virtual-dtor',
+    '-std=c++1z'
   ],
   c_args: [
     '-Wno-deprecated',

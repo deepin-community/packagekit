@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Assamese (http://www.transifex.com/freedesktop/packagekit/language/as/)\n"
+"Language-Team: Assamese (http://app.transifex.com/freedesktop/packagekit/language/as/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -125,9 +125,6 @@ msgstr "এটা EULA গ্ৰহণ কৰিবলৈ প্ৰমাণী�
 
 msgid "Authentication is required to cancel a task that was not started by yourself"
 msgstr "আপুনি নিজেই আৰম্ভ নকৰা কাৰ্য্য এটা বাতিল কৰিবলৈ প্ৰমাণীকৰণৰ প্ৰয়োজন"
-
-msgid "Authentication is required to reload the device with a new driver"
-msgstr "নতুন চালক সহ যন্ত্ৰটি পুনঃ লোড কৰাৰ বাবে অনুমোদন প্ৰয়োজন"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
 msgid "Available"
@@ -442,10 +439,10 @@ msgid "Install package '%s' to provide command '%s'?"
 msgstr "'%s' সৰঞ্জাম সংস্থাপন কৰা যাওক যি '%s' আদেশ দিয়ে ?"
 
 #. SECURITY:
-#. - Normal users do not need authentication to install signed packages
-#. from signed repositories, as this cannot exploit a system.
-#. - Paranoid users (or parents!) can change this to 'auth_admin' or
-#. 'auth_admin_keep'.
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
 msgid "Install signed package"
 msgstr "চহি কৰা সৰঞ্জাম সংস্থাপন কৰক"
 
@@ -676,15 +673,6 @@ msgstr "পুনঃ সংস্থাপন কৰা হ'ল"
 #. TRANSLATORS: The action of the package, in present tense
 msgid "Reinstalling"
 msgstr "পুনঃ সংস্থাপন কৰা হৈছে"
-
-#. SECURITY:
-#. - Normal users require admin authentication to rebind a driver
-#. so that it works after we install firmware.
-#. - This should not be set to 'yes' as unprivileged users could then
-#. try to rebind drivers in use, for instance security authentication
-#. devices.
-msgid "Reload a device"
-msgstr "যন্ত্ৰ পুনঃ লোড কৰক"
 
 #. SECURITY:
 #. - Normal users require admin authentication to remove packages as
@@ -965,8 +953,8 @@ msgstr "এই মুহূৰ্তে কোনো উন্নয়ন উপ�
 msgid "This tool could not find all the packages: %s"
 msgstr "এই সৰঞ্জামে সকলো সৰঞ্জামসমূহ বিচাৰিব নোৱাৰিলে: %s"
 
-#. TRANSLATORS: There was an error getting the list
-#. * of files for the package. The detailed error follows
+#. TRANSLATORS: There was an error finding a package
+#. * for installation. The detailed error follows.
 #, c-format
 msgid "This tool could not find any available package: %s"
 msgstr "উপলব্ধ কোনো সৰঞ্জাম এই সামগ্ৰী দ্বাৰা পোৱা নাযায়: %s"

@@ -1,3 +1,175 @@
+packagekit (1.2.8-2) unstable; urgency=medium
+
+  * Add strlen-cmp-memfix.patch:
+    - Check string length correctly to prevent memory
+      over-consumption.
+  * Add identify-ubuntu.patch:
+    - Do not incorrectly identify Ubuntu sources as coming
+      from Debian.
+  * Switch build dependency from pkg-config -> pkgconf,
+    add gobject-introspection-bin.
+
+ -- Matthias Klumpp <mak@debian.org>  Tue, 20 Feb 2024 22:20:42 +0100
+
+packagekit (1.2.8-1) unstable; urgency=medium
+
+  [ Matthias Klumpp ]
+  * New upstream version: 1.2.8
+    - Removes bashisms (Closes: #772289)
+    - Fixes crash when finishing a uncommitted transaction (Closes: #1054026)
+    - Deduplicates offline-update entries (Closes: #910365)
+  * Slightly tweak description text
+
+  [ Helmut Grohne ]
+  * Fix FTBFS when systemd.pc changes systemdsystemunitdir (Closes: #1052982)
+
+ -- Matthias Klumpp <mak@debian.org>  Wed, 08 Nov 2023 22:28:00 +0100
+
+packagekit (1.2.7-1) unstable; urgency=medium
+
+  * New upstream version 1.2.7
+  * Drop all patches: Applied upstream
+  * Enable all tests except for the daemon tests
+    - The daemon tests need special configuration and
+      root access, so we still can not run them.
+  * Update symbols file
+
+ -- Matthias Klumpp <mak@debian.org>  Sun, 27 Aug 2023 15:46:54 +0200
+
+packagekit (1.2.6-5) unstable; urgency=medium
+
+  * Add fix-tiny-memleak.patch:
+    - Free transaction property when progress is done.
+  * Add remove-references-to-packagekit.org.patch:
+    - The packagekit.org domain was taken over by an actor who is
+      serving potentially malicious ads on it, and no longer redirects
+      to the proper pages. To ensure nobody lands there accidentally,
+      replace all links to pk.org with the proper ones pointing at
+      freedesktop.org.
+  * Make the daemon package recommend packagekit-tools again
+    - This change was not intended for bookworm and may
+      be re-applied after its release (Closes: #1036153).
+
+ -- Matthias Klumpp <mak@debian.org>  Sun, 28 May 2023 19:00:10 +0200
+
+packagekit (1.2.6-4) unstable; urgency=medium
+
+  * Add apt-fix-mimetype-search-crash.patch (Closes: #1032510)
+    - Fixes a daemon crash when searching for provided mediatypes
+  * packagekit: Recommend, instead of suggest appstream
+    - It is needed for many operations, and quite odd for users if data
+      is randomly missing with no explanation.
+  * Don't have the library recommend the daemon package (Closes: #1012175)
+  * Bump standards version (no changes needed)
+
+ -- Matthias Klumpp <mak@debian.org>  Sun, 16 Apr 2023 18:58:34 +0200
+
+packagekit (1.2.6-3) unstable; urgency=medium
+
+  * Add apt-better-repo-names.patch:
+    - Display meaningful repository names instead of just suite names.
+  * Add pkcon-fix-progressbar-padding.patch:
+    - Fix layout when progress is shown.
+  * Add shutdown-daemon-on-idle.patch:
+    - Shut down daemon when it is not used again. This functionality
+      was originally removed to work around a bug in DNF which does
+      not affect us in Debian (Closes: #802306).
+  * Add fix-uninitialized-timer.patch:
+    - Fix potential crash that may occur on daemon shutdown.
+  * Add apt-update-urgency-as-status.patch:
+    - Send update urgencies as package status again, as this behavior
+      seems to be expected by frontends and did not cause any problems
+      in the past (Closes: #1030179).
+
+ -- Matthias Klumpp <mak@debian.org>  Fri, 10 Feb 2023 22:48:36 +0100
+
+packagekit (1.2.6-2) unstable; urgency=high
+
+  * Ensure PackageKit services aren't stopped or restarted during
+    package upgrade, as PackageKit might be performing an upgrade
+    of itself, and killing an ongoing APT transaction will break
+    the package manager and require manual repair.
+    This is an especially big problem when performing offline upgrades.
+    (Closes: #880712)
+
+ -- Matthias Klumpp <mak@debian.org>  Wed, 04 Jan 2023 18:40:38 +0100
+
+packagekit (1.2.6-1) unstable; urgency=medium
+
+  * New upstream version: 1.2.6
+    - New plural signals for improved performance
+    - Large APT backend refactoring
+    - Changelogs from APT are emitted correctly now
+  * Drop patches: Applied upstream
+  * Adjust rules for aptcc rename
+  * Refresh policy patch
+  * Update symbols file
+  * Depend on polkitd instead of policykit-1 (Closes: #1022071)
+  * Revert "Add alternate recommends for packagekit-installer"
+    - This patch changed the maintainer to Ubuntu, so was likely added
+      by mistake. Dropped the maintainer change, re-added the
+      "packagekit-installer" recommendation, as it is inert on Debian.
+
+ -- Matthias Klumpp <mak@debian.org>  Thu, 01 Dec 2022 20:42:52 +0100
+
+packagekit (1.2.5-4) unstable; urgency=medium
+
+  [ Ken VanDine ]
+  * Add alternate recommends for packagekit-installer
+
+  [ Debian Janitor ]
+  * Apply multi-arch hints. + packagekit-gtk3-module: Add Multi-Arch: same.
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Wed, 30 Nov 2022 15:25:46 -0500
+
+packagekit (1.2.5-3) unstable; urgency=medium
+
+  * fix-single-candidate-pkgid-emission.patch: Handle case when there
+    is no candidate at all (LP: #1963904)
+  * Add aptcc_more-smartpointers.patch: Use smartpointers in more places
+
+ -- Matthias Klumpp <mak@debian.org>  Tue, 15 Mar 2022 14:36:34 +0100
+
+packagekit (1.2.5-2) unstable; urgency=medium
+
+  * Add fix-single-candidate-pkgid-emission.patch
+    - Unblock updates by emitting package-IDs again even if there
+      is just one candidate available.
+
+ -- Matthias Klumpp <mak@debian.org>  Tue, 22 Feb 2022 23:48:44 +0100
+
+packagekit (1.2.5-1) unstable; urgency=medium
+
+  * New upstream version: 1.2.5
+    Notable changes:
+    - aptcc: Do not mark all updates as manually installed
+    - aptcc: Apply auto/manual state from previously resolved pkgids
+      when needed
+    - aptcc: Attempt to fix broken packages again when system
+      repair is requested
+    - aptcc: Correctly list all the available package versions
+    - aptcc: Display an excerpt of dpkg's log on error instead of not
+      failing at all
+    - aptcc: Emit only the first, likely highest-quality error when dpkg fails
+    - aptcc: Make package downgrades work again
+    - aptcc: Return local file listings in the same format as installed ones
+    - Add flags to D-Bus offline invoking methods
+    - Properly handle allow-reinstall flag for installations
+    - Provide better error message if trying to install an installed package
+    - Wait until online to activate systemd service
+  * policy: Allow any inactive user to refresh the package cache
+    as well (Closes: #965030)
+  * Update symbols file
+  * Mark d/rules as not requiring root
+  * Bump dh compat level to 13
+  * Drop some no longer needed breaks constraints
+  * policy: Allow any user to trigger offline updates
+    by default (Closes: #1003141)
+  * Remove 2 obsolete maintscript entries in 1 files (thanks, Janitor!)
+  * Set upstream metadata fields: Bug-Database, Contact (thanks, Janitor!)
+
+ -- Matthias Klumpp <mak@debian.org>  Thu, 17 Feb 2022 21:40:18 +0100
+
 packagekit (1.2.4-1) unstable; urgency=medium
 
   * New upstream version: 1.2.4
@@ -599,7 +771,7 @@ packagekit (0.8.6-1) experimental; urgency=low
   * Don't create extra package for offline-updates
   * Make PackageKit work on non-Linux archs again
 
- -- Matthias Klumpp <matthias@tenstral.net>  Tue, 28 Nov 2012 14:12:40 +0100
+ -- Matthias Klumpp <matthias@tenstral.net>  Wed, 28 Nov 2012 14:12:40 +0100
 
 packagekit (0.8.4-1) experimental; urgency=low
 

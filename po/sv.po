@@ -3,9 +3,10 @@
 # This file is distributed under the same license as the PackageKit package.
 #
 # Translators:
-# Anders Jonsson <transifex@norsjovallen.se>, 2014,2017,2019
+# Anders Jonsson <transifex@norsjovallen.se>, 2014,2017,2019,2022
 # Daniel Nylander <po@danielnylander.se>, 2008-2011
 # Josef Andersson <josef.andersson@fripost.org>, 2017-2018
+# Luna Jernberg <bittin@cafe8bitar.se>, 2022
 # Richard Hughes <richard@hughsie.com>, 2011
 # Sebastian Rasmussen <sebras@gmail.com>, 2015
 # Sebastian Rasmussen <sebras@gmail.com>, 2015-2016
@@ -13,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PackageKit\n"
 "Report-Msgid-Bugs-To: \n"
-"Language-Team: Swedish (http://www.transifex.com/freedesktop/packagekit/language/sv/)\n"
+"Language-Team: Swedish (http://app.transifex.com/freedesktop/packagekit/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -181,9 +182,6 @@ msgstr "Autentisering krävs för att uppdatera systemprogramförråden"
 msgid "Authentication is required to reinstall software"
 msgstr "Autentisering krävs för att installera om programvara"
 
-msgid "Authentication is required to reload the device with a new driver"
-msgstr "Autentisering krävs för att uppdatera enheten med en ny drivrutin"
-
 msgid "Authentication is required to remove software"
 msgstr "Autentisering krävs för att ta bort programvara"
 
@@ -309,6 +307,9 @@ msgstr "Kommando hittades ej, giltiga kommando är:"
 #. database
 msgid "Committing changes"
 msgstr "Verkställer ändringar"
+
+msgid "Config file was not found."
+msgstr "Konfigurationsfil hittades inte."
 
 #. TRANSLATORS: transaction state, we are copying package files before or
 #. after the transaction
@@ -472,9 +473,19 @@ msgstr "Misslyckades med att installera paket"
 msgid "Failed to launch:"
 msgstr "Misslyckades med att starta:"
 
+#. TRANSLATORS: The placeholder is an error message
+#, c-format
+msgid "Failed to load config file: %s"
+msgstr "Misslyckades med att läsa in konfigurationsfil: %s"
+
 #. TRANSLATORS: cannot load the backend the user specified
 msgid "Failed to load the backend"
 msgstr "Misslyckades med att läsa in bakänden"
+
+#. TRANSLATORS: cannot load the backend the user specified
+#, c-format
+msgid "Failed to load the backend: %s"
+msgstr "Misslyckades med att läsa in bakänden: %s"
 
 #. TRANSLATORS: probably not yet installed
 msgid "Failed to load the config file"
@@ -487,6 +498,12 @@ msgstr "Misslyckades med att tolka argument"
 #. TRANSLATORS: we failed to contact the daemon
 msgid "Failed to parse command line"
 msgstr "Misslyckades med att tolka kommandoraden"
+
+#. TRANSLATORS: The placeholder is an error message.
+#. * `auto` is a potential value of the DefaultBackend= configuration key.
+#, c-format
+msgid "Failed to resolve auto: %s"
+msgstr "Misslyckades med att slå upp auto: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
 msgid "Failed to search for file"
@@ -603,7 +620,7 @@ msgstr "Installera ett redan installerat paket en gång till"
 
 #. SECURITY
 #. - Normal users require admin authentication to downgrade packages.
-#. - User authorized to dowgrade signed packages is authorized to install
+#. - User authorized to downgrade signed packages is authorized to install
 #. them as well.
 #. - If a package in question is not trusted, user's permission to install
 #. untrusted package will be checked as well.
@@ -621,10 +638,10 @@ msgid "Install package '%s' to provide command '%s'?"
 msgstr "Installera paketet ”%s” för att tillhandahålla kommandot ”%s”?"
 
 #. SECURITY:
-#. - Normal users do not need authentication to install signed packages
-#. from signed repositories, as this cannot exploit a system.
-#. - Paranoid users (or parents!) can change this to 'auth_admin' or
-#. 'auth_admin_keep'.
+#. - Normal users need authentication to install signed packages
+#. from signed repositories, because otherwise the system is
+#. only as secure as the least-secure package available in the
+#. repositories.
 msgid "Install signed package"
 msgstr "Installera signerat paket"
 
@@ -930,15 +947,6 @@ msgid "Reinstalling"
 msgstr "Installerar om"
 
 #. SECURITY:
-#. - Normal users require admin authentication to rebind a driver
-#. so that it works after we install firmware.
-#. - This should not be set to 'yes' as unprivileged users could then
-#. try to rebind drivers in use, for instance security authentication
-#. devices.
-msgid "Reload a device"
-msgstr "Uppdatera en enhet"
-
-#. SECURITY:
 #. - Normal users require admin authentication to remove packages as
 #. this can make the system unbootable or stop other applications from
 #. working.
@@ -1220,10 +1228,6 @@ msgstr "Följande paket måste tas bort:"
 msgid "The following packages have to be updated:"
 msgstr "Följande paket måste uppdateras:"
 
-#. TRANSLATORS: command line argument, just output without fancy formatting
-msgid "The maximum metadata cache age. Use -1 for 'never'."
-msgstr "Maximal ålder för metadata-cache. Använd -1 för ”never”."
-
 #. TRANSLATORS: tell the user what package provides the command
 msgid "The package providing this file is:"
 msgstr "Paketet som tillhandahåller denna fil är:"
@@ -1231,6 +1235,11 @@ msgstr "Paketet som tillhandahåller denna fil är:"
 #. TRANSLATORS: The network settings could not be sent
 msgid "The proxy could not be set"
 msgstr "Proxyservern kunde inte ställas in"
+
+#. TRANSLATORS: There was an error finding a package
+#. * for installation, it may already be installed.
+msgid "The selected packages may already be installed."
+msgstr "De valda paketen kanske redan är installerade."
 
 #. TRANSLATORS: tell the user we've not done anything
 msgid "The signature was not accepted."
@@ -1278,8 +1287,12 @@ msgstr "Det finns inga uppgraderingar tillgängliga just nu."
 msgid "This tool could not find all the packages: %s"
 msgstr "Detta verktyg kunde inte hitta alla paketen: %s"
 
-#. TRANSLATORS: There was an error getting the list
-#. * of files for the package. The detailed error follows
+#. TRANSLATORS: We were unable to find a package for installation.
+msgid "This tool could not find any available package."
+msgstr "Detta verktyg kunde inte hitta något tillgängligt paket."
+
+#. TRANSLATORS: There was an error finding a package
+#. * for installation. The detailed error follows.
 #, c-format
 msgid "This tool could not find any available package: %s"
 msgstr "Detta verktyg kunde inte hitta några tillgängliga paket: %s"
