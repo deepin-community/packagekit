@@ -1,3 +1,4 @@
 policy.diff
 01_strlen-cmp-memfix.patch
 02_identify-ubuntu.patch
+03_not_call_dbus_on_ostree_booted_systems.patch

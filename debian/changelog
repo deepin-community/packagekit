@@ -1,3 +1,9 @@
+packagekit (1.2.8-2deepin1) unstable; urgency=medium
+
+  * Not call dbus on ostree-booted systems
+
+ -- ssk-wh <fanpengcheng@uniontech.com>  Wed, 18 Dec 2024 13:15:30 +0800
+
 packagekit (1.2.8-2deepin0) unstable; urgency=medium
 
   * No source change upload against GCC 12.
