@@ -46,10 +46,12 @@
 #include "dnf-backend.h"
 #include "pk-backend-dnf-common.h"
 
+#define DNF_SACK_MAX_AGE	600 /* seconds */
+
 typedef struct {
 	DnfSack		*sack;
-	gboolean	 valid;
 	gchar		*key;
+	GTimer		*timer;
 } DnfSackCacheItem;
 
 typedef struct {
@@ -59,6 +61,7 @@ typedef struct {
 	GMutex		 sack_mutex;
 	GTimer		*repos_timer;
 	gchar		*release_ver;
+	guint		 sack_expire_id;
 } PkBackendDnfPrivate;
 
 typedef struct {
@@ -94,24 +97,37 @@ pk_backend_supports_parallelization (PkBackend *backend)
 	return FALSE;
 }
 
+static gboolean
+pk_backend_check_sack_timer (gpointer key, gpointer value, gpointer user_data)
+{
+	DnfSackCacheItem *cache_item = value;
+	if (g_timer_elapsed (cache_item->timer, NULL) > DNF_SACK_MAX_AGE) {
+		g_debug ("invalidating %s as expired", (char *)key);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static gboolean
+pk_backend_sack_expire (gpointer user_data)
+{
+	PkBackendDnfPrivate *priv = user_data;
+	g_autoptr(GMutexLocker) locker = g_mutex_locker_new (&priv->sack_mutex);
+
+	g_hash_table_foreach_remove (priv->sack_cache,
+				     pk_backend_check_sack_timer, NULL);
+	return TRUE;
+}
+
 static void
 pk_backend_sack_cache_invalidate (PkBackend *backend, const gchar *why)
 {
-	GList *l;
-	DnfSackCacheItem *cache_item;
 	PkBackendDnfPrivate *priv = pk_backend_get_user_data (backend);
-	g_autoptr(GList) values = NULL;
 	g_autoptr(GMutexLocker) locker = g_mutex_locker_new (&priv->sack_mutex);
 
-	/* set all the cached sacks as invalid */
-	values = g_hash_table_get_values (priv->sack_cache);
-	for (l = values; l != NULL; l = l->next) {
-		cache_item = l->data;
-		if (cache_item->valid) {
-			g_debug ("invalidating %s as %s", cache_item->key, why);
-			cache_item->valid = FALSE;
-		}
-	}
+	/* remove all cached sacks */
+	g_debug ("removing all dnf sack caches");
+	g_hash_table_remove_all (priv->sack_cache);
 }
 
 static void
@@ -124,6 +140,7 @@ pk_backend_yum_repos_changed_cb (DnfRepoLoader *repo_loader, PkBackend *backend)
 static void
 dnf_sack_cache_item_free (DnfSackCacheItem *cache_item)
 {
+	g_timer_destroy (cache_item->timer);
 	g_object_unref (cache_item->sack);
 	g_free (cache_item->key);
 	g_slice_free (DnfSackCacheItem, cache_item);
@@ -261,6 +278,10 @@ pk_backend_initialize (GKeyFile *conf, PkBackend *backend)
 						  g_free,
 						  (GDestroyNotify) dnf_sack_cache_item_free);
 
+	priv->sack_expire_id = g_timeout_add_seconds (DNF_SACK_MAX_AGE / 2,
+						      pk_backend_sack_expire,
+						      priv);
+
 	if (!pk_backend_ensure_default_dnf_context (backend, &error))
 		g_warning ("failed to setup context: %s", error->message);
 }
@@ -273,6 +294,8 @@ pk_backend_destroy (PkBackend *backend)
 		g_key_file_unref (priv->conf);
 	if (priv->context != NULL)
 		g_object_unref (priv->context);
+	if (priv->sack_expire_id > 0)
+		g_source_remove (priv->sack_expire_id);
 	g_timer_destroy (priv->repos_timer);
 	g_mutex_clear (&priv->sack_mutex);
 	g_hash_table_unref (priv->sack_cache);
@@ -316,9 +339,9 @@ pk_backend_state_action_changed_cb (DnfState *state,
 {
 	if (action != DNF_STATE_ACTION_UNKNOWN) {
 		g_debug ("got state %s with hint %s",
-			 pk_status_enum_to_string (action),
+			 pk_status_enum_to_string ((PkStatusEnum) action),
 			 action_hint);
-		pk_backend_job_set_status (job, action);
+		pk_backend_job_set_status (job, (PkStatusEnum) action);
 	}
 
 	switch (action) {
@@ -651,14 +674,9 @@ dnf_utils_create_sack_for_filters (PkBackendJob *job,
 		g_autoptr(GMutexLocker) locker = g_mutex_locker_new (&priv->sack_mutex);
 		cache_item = g_hash_table_lookup (priv->sack_cache, cache_key);
 		if (cache_item != NULL && cache_item->sack != NULL) {
-			if (cache_item->valid) {
-				g_debug ("using cached sack %s", cache_key);
-				return g_object_ref (cache_item->sack);
-			} else {
-				/* we have to do this now rather than rely on the
-				 * callback of the hash table */
-				g_hash_table_remove (priv->sack_cache, cache_key);
-			}
+			g_debug ("using cached sack %s", cache_key);
+			g_timer_start (cache_item->timer);
+			return g_object_ref (cache_item->sack);
 		}
 	}
 
@@ -724,7 +742,7 @@ dnf_utils_create_sack_for_filters (PkBackendJob *job,
 	cache_item = g_slice_new (DnfSackCacheItem);
 	cache_item->key = g_strdup (cache_key);
 	cache_item->sack = g_object_ref (sack);
-	cache_item->valid = TRUE;
+	cache_item->timer = g_timer_new ();
 	g_debug ("created cached sack %s", cache_item->key);
 	g_hash_table_insert (priv->sack_cache, g_strdup (cache_key), cache_item);
 	g_mutex_unlock (&priv->sack_mutex);
@@ -855,6 +873,7 @@ pk_backend_what_provides_decompose (gchar **values, GError **error)
 		g_ptr_array_add (array, g_strdup_printf ("postscriptdriver(%s)", values[i]));
 		g_ptr_array_add (array, g_strdup_printf ("plasma4(%s)", values[i]));
 		g_ptr_array_add (array, g_strdup_printf ("plasma5(%s)", values[i]));
+		g_ptr_array_add (array, g_strdup_printf ("language(%s)", values[i]));
 	}
 	g_ptr_array_add (array, NULL);
 	return (gchar **) g_ptr_array_free (array, FALSE);
@@ -1099,7 +1118,7 @@ pk_backend_search_thread (PkBackendJob *job, GVariant *params, gpointer user_dat
 				dnf_advisory_free (advisory);
 #endif
 				info_enum = dnf_advisory_kind_to_info_enum (kind);
-				dnf_package_set_info (pkg, info_enum);
+				dnf_package_set_info (pkg, (DnfPackageInfo) info_enum);
 			}
 		}
 	}
@@ -1823,6 +1842,194 @@ out:
 }
 
 static void
+dnf_utils_process_dependency (DnfSack *sack,
+			      DnfPackage *pkg,
+			      PkRoleEnum role,
+			      gboolean recursive,
+			      GHashTable *visited,
+			      GPtrArray *results_array,
+			      GError **error)
+{
+	g_autoptr(GQueue) queue = g_queue_new ();
+	g_queue_push_tail (queue, g_object_ref (pkg));
+
+	/* mark the start package as visited so we don't process it again */
+	if (!g_hash_table_contains (visited, dnf_package_get_package_id (pkg)))
+		g_hash_table_add (visited, g_strdup (dnf_package_get_package_id (pkg)));
+
+	while (!g_queue_is_empty (queue)) {
+		g_autoptr(DnfPackage) curr = g_queue_pop_head (queue);
+		g_autoptr(DnfReldepList) reldeps = NULL;
+
+		if (role == PK_ROLE_ENUM_DEPENDS_ON)
+			reldeps = dnf_package_get_requires (curr);
+		else
+			reldeps = dnf_package_get_provides (curr);
+
+		for (guint i = 0; i < (guint) dnf_reldep_list_count (reldeps); i++) {
+			DnfReldep *reldep = dnf_reldep_list_index (reldeps, i);
+			const gchar *req = dnf_reldep_to_string (reldep);
+			hy_autoquery HyQuery query = hy_query_create (sack);
+			g_autoptr(GPtrArray) results = NULL;
+
+			/* find packages that provide the requirement, or require the provided capability */
+			if (role == PK_ROLE_ENUM_DEPENDS_ON)
+				hy_query_filter (query, HY_PKG_PROVIDES, HY_EQ, req);
+			else
+				hy_query_filter (query, HY_PKG_REQUIRES, HY_EQ, req);
+
+			results = dnf_utils_run_query_with_newest_filter (sack, query);
+			for (guint j = 0; j < results->len; j++) {
+				DnfPackage *res = g_ptr_array_index (results, j);
+				const gchar *resid = dnf_package_get_package_id (res);
+
+				/* ignore self-referential dependencies */
+				if (g_strcmp0 (resid, dnf_package_get_package_id (curr)) == 0)
+					continue;
+
+				if (!g_hash_table_contains (visited, resid)) {
+					g_hash_table_add (visited, g_strdup (resid));
+					g_ptr_array_add (results_array, g_object_ref (res));
+					if (recursive)
+						g_queue_push_tail (queue, g_object_ref (res));
+				}
+			}
+
+		}
+	}
+}
+
+static void
+backend_dependency_query_thread (PkBackendJob *job, GVariant *params, gpointer user_data)
+{
+	gboolean ret;
+	DnfState *state_local;
+	DnfPackage *pkg;
+	PkBackendDnfJobData *job_data = pk_backend_job_get_user_data (job);
+	PkBitfield filters;
+	PkRoleEnum role;
+	g_autofree gchar **package_ids = NULL;
+	g_autoptr(DnfSack) sack = NULL;
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GHashTable) hash = NULL;
+	g_autoptr(GHashTable) emitted = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	g_autoptr(GPtrArray) results_array = g_ptr_array_new_with_free_func (g_object_unref);
+	gboolean recursive;
+	g_variant_get (params, "(t^a&sb)",
+		       &filters,
+		       &package_ids,
+		       &recursive);
+
+	/* set state */
+	ret = dnf_state_set_steps (job_data->state, NULL,
+				   50, /* add repos */
+				   49, /* find packages */
+				   1, /* emit */
+				   -1);
+	g_assert (ret);
+
+	/* get role */
+	role = pk_backend_job_get_role (job);
+
+	/* get sack */
+	state_local = dnf_state_get_child (job_data->state);
+	sack = dnf_utils_create_sack_for_filters (job,
+						  filters,
+						  DNF_CREATE_SACK_FLAG_USE_CACHE,
+						  state_local,
+						  &error);
+	if (sack == NULL) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		return;
+	}
+
+	/* done */
+	if (!dnf_state_done (job_data->state, &error)) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		return;
+	}
+
+	/* find packages */
+	hash = dnf_utils_find_package_ids (sack, package_ids, &error);
+	if (hash == NULL) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		return;
+	}
+
+	/* done */
+	if (!dnf_state_done (job_data->state, &error)) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		return;
+	}
+
+	/* get dependency information */
+	for (guint i = 0; package_ids[i] != NULL; i++) {
+		pkg = g_hash_table_lookup (hash, package_ids[i]);
+		if (pkg == NULL) {
+			pk_backend_job_error_code (job,
+						   PK_ERROR_ENUM_PACKAGE_NOT_FOUND,
+						   "Failed to find %s", package_ids[i]);
+			return;
+		}
+
+		if (role == PK_ROLE_ENUM_DEPENDS_ON ||
+		    role == PK_ROLE_ENUM_REQUIRED_BY) {
+			if (i == 0)
+				g_hash_table_remove_all (emitted);
+			dnf_utils_process_dependency (sack,
+						      pkg,
+						      role,
+						      recursive,
+						      emitted,
+						      results_array,
+						      &error);
+		}
+
+	}
+
+	/* emit */
+	if (results_array->len > 0)
+		dnf_emit_package_list_filter (job, filters, results_array);
+
+	/* done */
+	if (!dnf_state_done (job_data->state, &error)) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		return;
+	}
+
+}
+
+void
+pk_backend_depends_on (PkBackend *backend, PkBackendJob *job, PkBitfield filters, gchar **package_ids, gboolean recursive)
+{
+	PkBackendDnfPrivate *priv = pk_backend_get_user_data (backend);
+	g_autoptr(GError) error = NULL;
+
+	if (!pk_backend_ensure_default_dnf_context (backend, &error)) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		pk_backend_job_finished (job);
+		return;
+	}
+	pk_backend_job_set_context (job, priv->context);
+	pk_backend_job_thread_create (job, backend_dependency_query_thread, NULL, NULL);
+}
+
+void
+pk_backend_required_by (PkBackend *backend, PkBackendJob *job, PkBitfield filters, gchar **package_ids, gboolean recursive)
+{
+	PkBackendDnfPrivate *priv = pk_backend_get_user_data (backend);
+	g_autoptr(GError) error = NULL;
+
+	if (!pk_backend_ensure_default_dnf_context (backend, &error)) {
+		pk_backend_job_error_code (job, error->code, "%s", error->message);
+		pk_backend_job_finished (job);
+		return;
+	}
+	pk_backend_job_set_context (job, priv->context);
+	pk_backend_job_thread_create (job, backend_dependency_query_thread, NULL, NULL);
+}
+
+static void
 backend_get_details_thread (PkBackendJob *job, GVariant *params, gpointer user_data)
 {
 	gboolean ret;
@@ -1906,15 +2113,15 @@ backend_get_details_thread (PkBackendJob *job, GVariant *params, gpointer user_d
 			}
 		}
 
-		pk_backend_job_details_full (job,
-					     package_ids[i],
-					     dnf_package_get_summary (pkg),
-					     dnf_package_get_license (pkg),
-					     PK_GROUP_ENUM_UNKNOWN,
-					     dnf_package_get_description (pkg),
-					     dnf_package_get_url (pkg),
-					     (gulong) dnf_package_get_installsize (pkg),
-					     download_size);
+		pk_backend_job_details (job,
+					package_ids[i],
+					dnf_package_get_summary (pkg),
+					dnf_package_get_license (pkg),
+					PK_GROUP_ENUM_UNKNOWN,
+					dnf_package_get_description (pkg),
+					dnf_package_get_url (pkg),
+					(gulong) dnf_package_get_installsize (pkg),
+					download_size);
 	}
 
 	/* done */
@@ -1995,15 +2202,15 @@ backend_get_details_local_thread (PkBackendJob *job, GVariant *params, gpointer 
 							   full_paths[i]);
 				return;
 			}
-			pk_backend_job_details_full (job,
-						     dnf_package_get_package_id (pkg),
-						     dnf_package_get_summary (pkg),
-						     dnf_package_get_license (pkg),
-						     PK_GROUP_ENUM_UNKNOWN,
-						     dnf_package_get_description (pkg),
-						     dnf_package_get_url (pkg),
-						     (gulong) dnf_package_get_installsize (pkg),
-						     dnf_package_is_downloaded (pkg) ? 0 : dnf_package_get_downloadsize (pkg));
+			pk_backend_job_details (job,
+						dnf_package_get_package_id (pkg),
+						dnf_package_get_summary (pkg),
+						dnf_package_get_license (pkg),
+						PK_GROUP_ENUM_UNKNOWN,
+						dnf_package_get_description (pkg),
+						dnf_package_get_url (pkg),
+						(gulong) dnf_package_get_installsize (pkg),
+						dnf_package_is_downloaded (pkg) ? 0 : dnf_package_get_downloadsize (pkg));
 		}
 	}
 

@@ -1,14 +1,87 @@
-packagekit (1.2.8-2deepin1) unstable; urgency=medium
+packagekit (1.3.4-3) unstable; urgency=medium
 
-  * Not call dbus on ostree-booted systems
+  * Team upload
 
- -- ssk-wh <fanpengcheng@uniontech.com>  Wed, 18 Dec 2024 13:15:30 +0800
+  [ Matthias Klumpp ]
+  * Stop recommending removed packagekit-tools package (Closes: #1126735)
+    (LP: #2139443)
 
-packagekit (1.2.8-2deepin0) unstable; urgency=medium
+  [ Jeremy Bícha ]
+  * Bump Standards Version to 4.7.3
 
-  * No source change upload against GCC 12.
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 01 Feb 2026 14:22:02 -0500
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Fri, 20 Sep 2024 12:15:25 +0800
+packagekit (1.3.4-1) unstable; urgency=medium
+
+  * New upstream version: 1.3.4
+  * Drop packagekit-tools package
+    - The pkcon/pkmon tools are obsolete, and the replacement `pkgcli` tool
+      is available in the main package. The old split into a separate -tools
+      package was for historical reasons only.
+    - Nothing in Debian uses pkcon, and there is plenty of time to adjust any
+      scripts while this change sits in unstable/testing. But if there is a
+      huge, justifiable need to reintroduce pkcon, we can add the -tools
+      package back (please file a bug in that case). The `pkgcli` utility
+      should be an adequate replacement for both pkcon & pkmon.
+  * Update symbols file
+
+ -- Matthias Klumpp <mak@debian.org>  Wed, 28 Jan 2026 21:28:30 +0100
+
+packagekit (1.3.3-1) unstable; urgency=medium
+
+  * New upstream version: 1.3.3
+  * Install GIR typelib to the correct location (Closes: #1118515)
+  * Install pkgctl, a new experimental command-line interface to
+    PackageKit, so it can receive some testing
+  * Update symbols file
+  * d/control: Drop Rules-Requires-Root (no longer needed)
+
+ -- Matthias Klumpp <mak@debian.org>  Mon, 24 Nov 2025 20:29:26 +0100
+
+packagekit (1.3.2-1) unstable; urgency=medium
+
+  * New upstream version: 1.3.2
+
+ -- Matthias Klumpp <mak@debian.org>  Thu, 02 Oct 2025 22:06:52 +0200
+
+packagekit (1.3.1-1) unstable; urgency=medium
+
+  [ Matthias Klumpp ]
+  * New upstream version: 1.3.1
+    - Implement enable/disable support for deb822-style repo sources
+    - Harmonize repo-ids between deb822 and legacy sources
+    - Use 'pk_backend_job_details_full()' so download size is
+      reported properly (Closes: #1026076)
+  * Drop patches: Applied upstream
+  * Drop build-dependency on gobject-introspection-bin (Closes: #1094624)
+
+  [ Michael Biebl ]
+  * Drop obsolete pkla configuration file (Closes: #1093073)
+
+ -- Matthias Klumpp <mak@debian.org>  Tue, 22 Apr 2025 22:18:16 +0200
+
+packagekit (1.3.0-3) unstable; urgency=medium
+
+  * Adjust for libapt-pkg7.0 API
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 17 Feb 2025 10:35:40 +0100
+
+packagekit (1.3.0-2) unstable; urgency=medium
+
+  * Team upload
+  * Backport patch to fix pkcon crashing in transactions with user prompt
+    (LP: #2086771)
+  * Backport patch to fix showing the GTK debconf helper on Wayland
+    (LP: #2086773)
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Fri, 08 Nov 2024 15:56:31 -0500
+
+packagekit (1.3.0-1) unstable; urgency=medium
+
+  * New upstream version: 1.3.0
+  * Drop all patches: Applied upstream
+
+ -- Matthias Klumpp <mak@debian.org>  Sun, 16 Jun 2024 17:40:52 +0200
 
 packagekit (1.2.8-2) unstable; urgency=medium
 

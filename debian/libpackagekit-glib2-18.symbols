@@ -111,6 +111,9 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_client_what_provides_async@Base 0.9.4
  pk_console_get_number@Base 1.2.1
  pk_console_get_prompt@Base 1.2.1
+ pk_console_str_width@Base 1.3.4
+ pk_console_strpad@Base 1.3.4
+ pk_console_text_truncate@Base 1.3.4
  pk_control_can_authorize_async@Base 0.9.4
  pk_control_can_authorize_finish@Base 0.9.4
  pk_control_error_get_type@Base 0.9.4
@@ -319,7 +322,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_progress_bar_end@Base 1.2.1
  pk_progress_bar_get_type@Base 1.2.1
  pk_progress_bar_new@Base 1.2.1
- pk_progress_bar_set_padding@Base 1.2.1
+ pk_progress_bar_set_allow_restart@Base 1.3.3
  pk_progress_bar_set_percentage@Base 1.2.1
  pk_progress_bar_set_size@Base 1.2.1
  pk_progress_bar_start@Base 1.2.1
@@ -341,6 +344,7 @@ libpackagekit-glib2.so.18 libpackagekit-glib2-18 #MINVER#
  pk_progress_get_type@Base 0.9.4
  pk_progress_get_uid@Base 1.1.0
  pk_progress_new@Base 0.9.4
+ pk_progress_new_with_callback@Base 1.3.1
  pk_progress_set_allow_cancel@Base 0.9.4
  pk_progress_set_caller_active@Base 0.9.4
  pk_progress_set_download_size_remaining@Base 0.9.4

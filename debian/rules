@@ -6,19 +6,19 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 # Use this variable to set the PackageKit configure flags
 PK_CONFIGURE_FLAGS = \
-			-Ddaemon_tests=false \
-			-Dpackaging_backend=apt \
-			-Dsystemd=true \
-			-Doffline_update=true \
-			-Dgobject_introspection=true \
-			-Dman_pages=true \
-			-Dgtk_doc=true \
-			-Dbash_completion=true \
-			-Dbash_command_not_found=true \
-			-Dgstreamer_plugin=true \
-			-Dgtk_module=true \
-			-Dcron=false \
-			-Dpython_backend=false
+		-Dpackaging_backend=apt \
+		-Ddaemon_tests=false \
+		-Dsystemd=true \
+		-Doffline_update=true \
+		-Dgobject_introspection=true \
+		-Dman_pages=true \
+		-Dgtk_doc=true \
+		-Dbash_completion=true \
+		-Dbash_command_not_found=true \
+		-Dgstreamer_plugin=true \
+		-Dgtk_module=true \
+		-Dcron=false \
+		-Dpython_backend=false
 
 ifneq ($(DEB_HOST_ARCH_OS), linux)
 	PK_CONFIGURE_FLAGS += -Dsystemd=false -Doffline_update=false
