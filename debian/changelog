@@ -1,3 +1,9 @@
+packagekit (1.2.8-2deepin2) unstable; urgency=medium
+
+  * Do not allow re-invoking methods on non-new transactions
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Thu, 23 Apr 2026 10:38:03 +0800
+
 packagekit (1.2.8-2deepin1) unstable; urgency=medium
 
   * Not call dbus on ostree-booted systems
