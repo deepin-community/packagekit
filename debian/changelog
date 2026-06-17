@@ -1,3 +1,12 @@
+packagekit (1.2.8-2deepin3) unstable; urgency=medium
+
+  * Fix CVE-2026-10294: Do not accept symlinks as frontend socket to
+    prevent unauthorized file probing via SetHints frontend-socket
+    argument
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 18 Jun 2026 03:18:35 +0800
+
+
 packagekit (1.2.8-2deepin2) unstable; urgency=medium
 
   * Do not allow re-invoking methods on non-new transactions

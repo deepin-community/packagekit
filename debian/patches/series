@@ -3,3 +3,6 @@ policy.diff
 02_identify-ubuntu.patch
 03_not_call_dbus_on_ostree_booted_systems.patch
 PK_Do-not-allow-re-invoking-methods-on-non-new-txn.patch
+
+# CVE-2026-10294
+CVE-2026-10294.patch
