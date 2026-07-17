@@ -566,21 +566,19 @@ void AptJob::emitUpdates(PkgList &output, PkBitfield filters)
         std::string origin  = vf.File().Origin() == NULL ? "" : vf.File().Origin();
         std::string archive = vf.File().Archive() == NULL ? "" : vf.File().Archive();
         std::string label   = vf.File().Label() == NULL ? "" : vf.File().Label();
-        if (origin.compare("Debian") == 0 ||
-                origin.compare("Ubuntu") == 0) {
-            if (ends_with(archive, "-security") ||
-                    label.compare("Debian-Security") == 0) {
-                state = PK_INFO_ENUM_SECURITY;
-            } else if (ends_with(archive, "-backports")) {
-                state = PK_INFO_ENUM_ENHANCEMENT;
-            } else if (ends_with(archive, "-proposed-updates") || ends_with(archive, "-updates-proposed")) {
-                state = PK_INFO_ENUM_LOW;
-            } else if (ends_with(archive, "-updates")) {
-                state = PK_INFO_ENUM_BUGFIX;
-            }
-        } else if (origin.compare("Backports.org archive") == 0 ||
-                   ends_with(origin, "-backports")) {
+
+        if (origin.compare("Backports.org archive") == 0 ||
+            ends_with(origin, "-backports")) {
             state = PK_INFO_ENUM_ENHANCEMENT;
+        } else if (ends_with(archive, "-security") ||
+                   label.compare("Debian-Security") == 0) {
+            state = PK_INFO_ENUM_SECURITY;
+        } else if (ends_with(archive, "-backports")) {
+            state = PK_INFO_ENUM_ENHANCEMENT;
+        } else if (ends_with(archive, "-proposed-updates") || ends_with(archive, "-updates-proposed")) {
+            state = PK_INFO_ENUM_LOW;
+        } else if (ends_with(archive, "-updates")) {
+            state = PK_INFO_ENUM_BUGFIX;
         }
 
         // NOTE: Frontends expect us to pass the update urgency as both its state *and* actual urgency value here.
@@ -749,7 +747,7 @@ bool AptJob::getArchive(pkgAcquire *Owner,
         StoreFilename = QuoteString(Version.ParentPkg().Name(),"_:") + '_' +
                 QuoteString(Version.VerStr(),"_:") + '_' +
                 QuoteString(Version.Arch(),"_:.") +
-                "." + flExtension(Parse.FileName());
+                "." + std::string{flExtension(Parse.FileName())};
     }
 
     for (; Vf.end() == false; Vf++) {
@@ -778,7 +776,7 @@ bool AptJob::getArchive(pkgAcquire *Owner,
                                  Version.ParentPkg().Name());
         }
 
-        string DestFile = directory + "/" + flNotDir(StoreFilename);
+        string DestFile = directory + "/" + std::string{flNotDir(StoreFilename)};
 
         // Create the item
         new pkgAcqFile(Owner,
@@ -808,7 +806,6 @@ void AptJob::emitPackageDetail(const pkgCache::VerIterator &ver)
         return;
     }
 
-    const pkgCache::PkgIterator &pkg = ver.ParentPkg();
     std::string section = ver.Section() == NULL ? "" : ver.Section();
 
     size_t found;
@@ -818,23 +815,16 @@ void AptJob::emitPackageDetail(const pkgCache::VerIterator &ver)
     pkgCache::VerFileIterator vf = ver.FileList();
     pkgRecords::Parser &rec = m_cache->GetPkgRecords()->Lookup(vf);
 
-    long size;
-    if (pkg->CurrentState == pkgCache::State::Installed && pkg.CurrentVer() == ver) {
-        // if the package is installed emit the installed size
-        size = ver->InstalledSize;
-    } else {
-        size = ver->Size;
-    }
-
     g_autofree gchar *package_id = m_cache->buildPackageId(ver);
-    pk_backend_job_details(m_job,
-                           package_id,
-                           m_cache->getShortDescription(ver).c_str(),
-                           "unknown",
-                           get_enum_group(section),
-                           m_cache->getLongDescriptionParsed(ver).c_str(),
-                           rec.Homepage().c_str(),
-                           size);
+    pk_backend_job_details_full (m_job,
+                                 package_id,
+                                 m_cache->getShortDescription(ver).c_str(),
+                                 "unknown",
+                                 get_enum_group(section),
+                                 m_cache->getLongDescriptionParsed(ver).c_str(),
+                                 rec.Homepage().c_str(),
+                                 ver->InstalledSize,
+                                 ver->Size);
 }
 
 void AptJob::emitDetails(PkgList &pkgs)
@@ -1108,8 +1098,8 @@ PkgList AptJob::getPackagesFromRepo(SourcesList::SourceRecord *&rec)
             continue;
         }
 
-        // Check if the site the package comes from is include in the Repo uri
-        if (vf.File().Site() == NULL || rec->URI.find(vf.File().Site()) == std::string::npos) {
+        // Check if the site the package comes from is included in the Repo uri
+        if (vf.File().Site() == NULL || rec->PrimaryURI.find(vf.File().Site()) == std::string::npos) {
             continue;
         }
 
